@@ -12,6 +12,7 @@
                         Lista de Usuarios Registrados
                     </h3>
                     <button type="button" id="btnNuevoRol" class="btn btn-success btn-sm"><i class="fas fa-users"></i> Nuevo Registro</button>
+                    <button type="button" id="btnReport" class="btn btn-success btn-sm"><i class="fas fa-users"></i> Reporte</button>
                 </div>
                 <div class="card-body">
                     <div class="row">

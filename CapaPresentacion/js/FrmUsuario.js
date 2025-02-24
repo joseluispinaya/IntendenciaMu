@@ -95,89 +95,95 @@ function dtUsuarios() {
     });
 }
 
-function cargarRoles() {
-    $("#cboRol").html("");
+async function cargarRoles() {
+    $("#cboRol").html(""); // Limpiar antes de cargar
 
-    $.ajax({
-        type: "POST",
-        url: "FrmUsuario.aspx/ObtenerRol",
-        data: {},
-        contentType: 'application/json; charset=utf-8',
-        error: function (xhr, ajaxOptions, thrownError) {
-            console.log(xhr.status + " \n" + xhr.responseText, "\n" + thrownError);
-        },
-        success: function (data) {
-            if (data.d.Estado) {
-                $.each(data.d.Data, function (i, row) {
-                    if (row.Activo === true) {
-                        $("<option>").attr({ "value": row.IdRol }).text(row.Descripcion).appendTo("#cboRol");
-                    }
+    try {
+        let response = await $.ajax({
+            type: "POST",
+            url: "FrmUsuario.aspx/ObtenerRol",
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json"
+        });
 
-                })
-            }
-
+        if (response.d.Estado) {
+            response.d.Data.forEach(row => {
+                if (row.Activo) {
+                    $("<option>").val(row.IdRol).text(row.Descripcion).appendTo("#cboRol");
+                }
+            });
         }
-    });
+    } catch (error) {
+        console.error("Error en cargarRoles:", error);
+    }
 }
 
 
 function mostrarImagenSeleccionada(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
+    let file = input.files[0];
+    let reader = new FileReader();
 
-        reader.onload = function (e) {
-            $('#imgUsuarioM').attr('src', e.target.result);
-        }
+    reader.onload = (e) => $('#imgUsuarioM').attr('src', e.target.result);
+    file ? reader.readAsDataURL(file) : $('#imgUsuarioM').attr('src', "Imagenes/Sinfotop.png");
 
-        reader.readAsDataURL(input.files[0]);
-
-        // Actualiza el nombre del archivo en el label
-        var fileName = input.files[0].name;
-        var nextSibling = $(input).next('.custom-file-label-upload');
-        nextSibling.text(fileName);
-    } else {
-        $('#imgUsuarioM').attr('src', "Imagenes/Sinfotop.png");
-
-        // Restablece el texto del label
-        var nextSibling = $(input).next('.custom-file-label-upload');
-        nextSibling.text('Ningún archivo seleccionado');
-    }
-
-
+    let fileName = file ? file.name : 'Ningún archivo seleccionado';
+    $(input).next('.custom-file-label-upload').text(fileName);
 }
 
 $('#txtFotoS').change(function () {
     mostrarImagenSeleccionada(this);
 });
 
+$.fn.inputFilter = function (inputFilter) {
+    return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function (e) { // Captura el evento como 'e'
+        if (inputFilter(this.value) || e.key === "Backspace" || e.key === " ") { // se usa 'e' en lugar de 'event'
+            this.oldValue = this.value;
+            this.oldSelectionStart = this.selectionStart;
+            this.oldSelectionEnd = this.selectionEnd;
+        } else if (this.hasOwnProperty("oldValue")) {
+            this.value = this.oldValue;
+            this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+        } else {
+            this.value = "";
+        }
+    });
+};
+
+$("#txtnombres").inputFilter(function (value) {
+    return /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]*$/u.test(value);
+});
+$("#txtapellidos").inputFilter(function (value) {
+    return /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]*$/u.test(value);
+});
+
+$("#txtCelular").inputFilter(function (value) {
+    return /^\d*$/.test(value) && value.length <= 8;
+});
+
+//function mostrarModal(modelo = {...MODELO_BASE}, cboEstadoDeshabilitado = true)
 function mostrarModal(modelo, cboEstadoDeshabilitado = true) {
-    // Verificar si modelo es null
-    modelo = modelo ?? MODELO_BASE;
+    modelo = modelo ?? { ...MODELO_BASE };
 
-    $("#txtIdUsuario").val(modelo.IdUsuario);
-    $("#txtnombres").val(modelo.Nombres);
-    $("#txtapellidos").val(modelo.Apellidos);
-    $("#txtCorreo").val(modelo.Correo);
-    $("#txtUsuario").val(modelo.Users);
-    $("#txtContra").val(modelo.Clave);
-    $("#txtCelular").val(modelo.Celular);
-    $("#cboRol").val(modelo.IdRol == 0 ? $("#cboRol option:first").val() : modelo.IdRol);
-    $("#cboEstado").val(modelo.Activo == true ? 1 : 0);
-    $("#imgUsuarioM").attr("src", modelo.ImageFull == "" ? "Imagenes/Sinfotop.png" : modelo.ImageFull);
+    const campos = {
+        "txtIdUsuario": modelo.IdUsuario,
+        "txtnombres": modelo.Nombres,
+        "txtapellidos": modelo.Apellidos,
+        "txtCorreo": modelo.Correo,
+        "txtUsuario": modelo.Users,
+        "txtContra": modelo.Clave,
+        "txtCelular": modelo.Celular,
+        "cboRol": modelo.IdRol || $("#cboRol option:first").val(),
+        "cboEstado": modelo.Activo ? 1 : 0,
+    };
 
-    // Configurar el estado de cboEstado según cboEstadoDeshabilitado jquery v 1.11.1
+    Object.entries(campos).forEach(([id, valor]) => $("#" + id).val(valor));
+
+    $("#imgUsuarioM").attr("src", modelo.ImageFull || "Imagenes/Sinfotop.png");
     $("#cboEstado").prop("disabled", cboEstadoDeshabilitado);
-
-    // Limpiar el input file y restablecer el texto del label
     $("#txtFotoS").val("");
     $(".custom-file-label-upload").text('Ningún archivo seleccionado');
 
-    if (cboEstadoDeshabilitado) {
-        $("#myLarlLabel").text("Nuevo Registro");
-    } else {
-        $("#myLarlLabel").text("Editar Registro");
-    }
-
+    $("#myLarlLabel").text(cboEstadoDeshabilitado ? "Nuevo Registro" : "Editar Registro");
     $("#modaluser").modal("show");
 }
 
@@ -197,7 +203,6 @@ $("#tbUsuario tbody").on("click", ".btn-editar", function (e) {
 
 $('#btnNuevoRol').on('click', function () {
     mostrarModal(null, true);
-    //$("#modalrol").modal("show");
 })
 
 function sendDataToServer(request) {
@@ -281,6 +286,88 @@ function registerDataAjax() {
     }
 }
 
+function sendDataEditToServer(request) {
+    $.ajax({
+        type: "POST",
+        url: "FrmUsuario.aspx/EditarUsuario",
+        data: JSON.stringify(request),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        beforeSend: function () {
+            $(".modal-content").LoadingOverlay("show");
+        },
+        success: function (response) {
+            $(".modal-content").LoadingOverlay("hide");
+            if (response.d.Estado) {
+                dtUsuarios();
+                $('#modaluser').modal('hide');
+                swal("Mensaje", response.d.Mensaje, "success");
+            } else {
+                swal("Mensaje", response.d.Mensaje, "warning");
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            $(".modal-content").LoadingOverlay("hide");
+            console.log(xhr.status + " \n" + xhr.responseText, "\n" + thrownError);
+        },
+        complete: function () {
+            // Rehabilitar el botón después de que la llamada AJAX se complete (éxito o error)
+            $('#btnGuardarCambios').prop('disabled', false);
+        }
+    });
+}
+
+function editarDataAjaxU() {
+    var fileInput = document.getElementById('txtFotoS');
+    var file = fileInput.files[0];
+
+    const modelo = structuredClone(MODELO_BASE);
+    modelo["IdUsuario"] = parseInt($("#txtIdUsuario").val());
+    modelo["Nombres"] = $("#txtnombres").val();
+    modelo["Apellidos"] = $("#txtapellidos").val();
+    modelo["Correo"] = $("#txtCorreo").val();
+    modelo["Users"] = $("#txtUsuario").val();
+    modelo["Clave"] = $("#txtContra").val();
+    modelo["Celular"] = $("#txtCelular").val();
+    modelo["IdRol"] = $("#cboRol").val();
+    modelo["Activo"] = ($("#cboEstado").val() == "1" ? true : false);
+
+    if (file) {
+
+        var maxSize = 2 * 1024 * 1024; // 2 MB en bytes
+        if (file.size > maxSize) {
+            swal("Mensaje", "La imagen seleccionada es demasiado grande max 1.5 Mb.", "warning");
+            // Rehabilitar el botón si hay un error de validación
+            $('#btnGuardarCambios').prop('disabled', false);
+            return;
+        }
+
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            var arrayBuffer = e.target.result;
+            var bytes = new Uint8Array(arrayBuffer);
+
+            var request = {
+                oUsuario: modelo,
+                imageBytes: Array.from(bytes)
+            };
+
+            sendDataEditToServer(request);
+        };
+
+        reader.readAsArrayBuffer(file);
+    } else {
+        // Si no se selecciona ningún archivo, envía un valor nulo o vacío para imageBytes
+        var request = {
+            oUsuario: modelo,
+            imageBytes: null // o cualquier otro valor que indique que no se envió ningún archivo
+        };
+
+        sendDataEditToServer(request);
+    }
+}
+
 function esCorreoValido(correo) {
     // Expresión regular mejorada para validar correos electrónicos
     var emailRegex = /^[a-zA-Z0-9._%+-ñÑáéíóúÁÉÍÓÚ]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -318,7 +405,13 @@ $('#btnGuardarCambios').on('click', function () {
         //registerDataAjax();
         registerDataAjax();
     } else {
-        swal("Mensaje", "Falta para Actualizar personal.", "warning")
-        //editarDataAjaxU();
+        //swal("Mensaje", "Falta para Actualizar personal.", "warning")
+        editarDataAjaxU();
     }
 })
+
+$('#btnReport').on('click', function () {
+
+    var url = 'ReporteCred.aspx';
+    window.open(url, '', 'height=700,width=900,scrollbars=0,location=1,toolbar=0');
+});

@@ -73,6 +73,52 @@ namespace CapaDatos
             }
         }
 
+        public Respuesta<bool> ActualizarUsuario(EUsuario oUsuario)
+        {
+            try
+            {
+                bool respuesta = false;
+                using (SqlConnection con = ConexionBD.GetInstance().ConexionDB())
+                {
+                    using (SqlCommand cmd = new SqlCommand("usp_ModificarUsuario", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue("@IdUsuario", oUsuario.IdUsuario);
+                        cmd.Parameters.AddWithValue("@Nombres", oUsuario.Nombres);
+                        cmd.Parameters.AddWithValue("@Apellidos", oUsuario.Apellidos);
+                        cmd.Parameters.AddWithValue("@Correo", oUsuario.Correo);
+                        cmd.Parameters.AddWithValue("@Users", oUsuario.Users);
+                        cmd.Parameters.AddWithValue("@Clave", oUsuario.Clave);
+                        cmd.Parameters.AddWithValue("@Celular", oUsuario.Celular);
+                        cmd.Parameters.AddWithValue("@Foto", oUsuario.Foto);
+                        cmd.Parameters.AddWithValue("@IdRol", oUsuario.IdRol);
+                        cmd.Parameters.AddWithValue("@Token", oUsuario.TokenSesion);
+                        cmd.Parameters.AddWithValue("@Activo", oUsuario.Activo);
+
+                        SqlParameter outputParam = new SqlParameter("@Resultado", SqlDbType.Bit)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        cmd.Parameters.Add(outputParam);
+
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        respuesta = Convert.ToBoolean(outputParam.Value);
+                    }
+                }
+                return new Respuesta<bool>
+                {
+                    Estado = respuesta,
+                    Mensaje = respuesta ? "Se Actualizo correctamente" : "Error al Actualizar intente mas tarde"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta<bool> { Estado = false, Mensaje = "Ocurrió un error: " + ex.Message };
+            }
+        }
+
         public Respuesta<List<EUsuario>> ObtenerUsuariosZ()
         {
             try

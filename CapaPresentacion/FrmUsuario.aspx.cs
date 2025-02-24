@@ -18,6 +18,7 @@ namespace CapaPresentacion
 
 		}
 
+        // Metodo para listar los roles para el usuario
         [WebMethod]
         public static Respuesta<List<ERol>> ObtenerRol()
 		{
@@ -37,6 +38,7 @@ namespace CapaPresentacion
             }
         }
 
+        // Metodo para listar datos del usuario
         [WebMethod]
         public static Respuesta<List<EUsuario>> ObtenerUsuario()
         {
@@ -57,6 +59,7 @@ namespace CapaPresentacion
             }
         }
 
+        // Metodo para registrar datos del usuario
         [WebMethod]
         public static Respuesta<bool> Guardar(EUsuario oUsuario, byte[] imageBytes)
         {
@@ -102,6 +105,81 @@ namespace CapaPresentacion
                     Estado = false,
                     Mensaje = "Ocurrió un error: " + ex.Message
                 };
+            }
+        }
+
+
+        // Metodo para actualizar datos del usuario
+        [WebMethod]
+        public static Respuesta<bool> EditarUsuario(EUsuario oUsuario, byte[] imageBytes)
+        {
+            try
+            {
+                // Validar que el usuario es correcto
+                if (oUsuario == null || oUsuario.IdUsuario <= 0)
+                {
+                    return new Respuesta<bool>() { Estado = false, Mensaje = "Datos de usuario inválidos" };
+                }
+
+                // Obtener el usuario existente
+                Respuesta<List<EUsuario>> Lista = NUsuario.GetInstance().ObtenerUsuarios();
+
+                var listaUsuarios = Lista.Data;
+                var item = listaUsuarios.FirstOrDefault(x => x.IdUsuario == oUsuario.IdUsuario);
+                if (item == null)
+                {
+                    return new Respuesta<bool>() { Estado = false, Mensaje = "Usuario no encontrado" };
+                }
+
+                // Manejar la imagen, si se proporciona una nueva
+                string imageUrl = item.Foto;  // Mantener la foto actual por defecto
+
+                if (imageBytes != null && imageBytes.Length > 0)
+                {
+                    using (var stream = new MemoryStream(imageBytes))
+                    {
+                        string folder = "/Imagenes/";
+                        string newImageUrl = Utilidadesj.GetInstance().UploadPhotoA(stream, folder);
+
+                        if (!string.IsNullOrEmpty(newImageUrl))
+                        {
+                            // Eliminar la imagen anterior si existe
+                            if (!string.IsNullOrEmpty(item.Foto))
+                            {
+                                string oldImagePath = HttpContext.Current.Server.MapPath(item.Foto);
+                                if (File.Exists(oldImagePath))
+                                {
+                                    File.Delete(oldImagePath);
+                                }
+                            }
+                            imageUrl = newImageUrl;
+                        }
+                    }
+                }
+
+                // Actualizar los datos del usuario
+                item.IdUsuario = oUsuario.IdUsuario;
+                item.Nombres = oUsuario.Nombres;
+                item.Apellidos = oUsuario.Apellidos;
+                item.Correo = oUsuario.Correo;
+                item.Users = oUsuario.Users;
+                item.Clave = oUsuario.Clave;
+                item.Celular = oUsuario.Celular;
+                item.Foto = imageUrl;
+                item.IdRol = oUsuario.IdRol;
+                item.Activo = oUsuario.Activo;
+
+                // Guardar cambios
+                Respuesta<bool> respuesta = NUsuario.GetInstance().ActualizarUsuario(item);
+                return respuesta;
+            }
+            catch (IOException ioEx)
+            {
+                return new Respuesta<bool> { Estado = false, Mensaje = "Error al manejar la imagen: " + ioEx.Message };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta<bool> { Estado = false, Mensaje = "Ocurrió un error: " + ex.Message };
             }
         }
 

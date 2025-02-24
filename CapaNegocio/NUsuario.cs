@@ -28,6 +28,11 @@ namespace CapaNegocio
             return DUsuario.GetInstance().RegistrarUsuario(oUsuario);
         }
 
+        public Respuesta<bool> ActualizarUsuario(EUsuario oUsuario)
+        {
+            return DUsuario.GetInstance().ActualizarUsuario(oUsuario);
+        }
+
         public Respuesta<List<EUsuario>> ObtenerUsuarios()
         {
             return DUsuario.GetInstance().ObtenerUsuariosZ();
