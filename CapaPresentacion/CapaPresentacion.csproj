@@ -81,6 +81,7 @@
     <Content Include="dist\css\alt\adminlte.plugins.min.css" />
     <Content Include="dist\css\cardstyle.css" />
     <Content Include="dist\css\inpfile.css" />
+    <Content Include="dist\css\login.css" />
     <Content Include="dist\img\AdminLTELogo.png" />
     <Content Include="dist\img\avatar.png" />
     <Content Include="dist\img\avatar2.png" />
@@ -126,7 +127,10 @@
     <Content Include="Imagenes\Sinfotop.png" />
     <Content Include="Inicio.aspx" />
     <Content Include="js\FrmUsuario.js" />
+    <Content Include="js\Login.js" />
+    <Content Include="js\Master.js" />
     <Content Include="js\ReporteCred.js" />
+    <Content Include="Login.aspx" />
     <Content Include="plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.css" />
     <Content Include="plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.min.css" />
     <Content Include="plugins\bootstrap-colorpicker\js\bootstrap-colorpicker.js" />
@@ -1987,6 +1991,13 @@
     </Compile>
     <Compile Include="Inicio.aspx.designer.cs">
       <DependentUpon>Inicio.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="PaginaMas.Master.cs">
       <DependentUpon>PaginaMas.Master</DependentUpon>

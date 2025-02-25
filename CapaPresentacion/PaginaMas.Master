@@ -64,7 +64,7 @@
             <span class="float-right text-muted text-sm">3 mins</span>
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                        <a href="#" id="salirsis" class="dropdown-item dropdown-footer">Cerrar Sesion</a>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -89,10 +89,10 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        <img id="imgUsumast" src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Intendencia GAMR</a>
+                        <a href="#" id="nomUserg" class="d-block">Intendencia GAMR</a>
                     </div>
                 </div>
 
@@ -238,6 +238,7 @@
     <script src="plugins/toastr/toastr.min.js"></script>
     <!-- AdminLTE App -->
     <script src="dist/js/adminlte.js"></script>
+    <script src="js/Master.js" type="text/javascript"></script>
     <asp:ContentPlaceHolder ID="footer" runat="server"></asp:ContentPlaceHolder>
 </body>
 </html>

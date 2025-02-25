@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using CapaEntidad;
+using CapaNegocio;
+using System.Web.Services;
 
 namespace CapaPresentacion
 {
@@ -13,5 +16,28 @@ namespace CapaPresentacion
 		{
 
 		}
-	}
+
+        [WebMethod]
+        public static Respuesta<string> ObtenerToken(int IdUsu)
+        {
+            try
+            {
+                Respuesta<string> tokendb = NUsuario.GetInstance().ObtenerToken(IdUsu);
+                return tokendb;
+            }
+            catch (Exception)
+            {
+                return new Respuesta<string>() { Estado = false };
+            }
+        }
+
+        [WebMethod]
+        public static Respuesta<bool> CerrarSesion()
+        {
+            //Configuracion.Ousuario = null;
+
+            return new Respuesta<bool>() { Estado = true };
+
+        }
+    }
 }
