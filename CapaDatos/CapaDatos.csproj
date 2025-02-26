@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConexionBD.cs" />
+    <Compile Include="DNotificacion.cs" />
+    <Compile Include="DPropietario.cs" />
     <Compile Include="DUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

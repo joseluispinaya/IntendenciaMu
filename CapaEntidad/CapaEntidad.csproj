@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ENotificacion.cs" />
+    <Compile Include="EPropietario.cs" />
     <Compile Include="ERol.cs" />
     <Compile Include="EUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

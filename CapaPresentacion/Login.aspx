@@ -47,8 +47,8 @@
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
                 <span>Inicie con usuario y clave</span>
-                <input type="text" id="txtusername" placeholder="Usuario">
-                <input type="password" id="txtpassword" placeholder="Password">
+                <input type="text" id="txtusername" placeholder="Usuario" value="zero01">
+                <input type="password" id="txtpassword" placeholder="Password" value="123456">
                 <!-- <a href="#">Forget Your Password?</a> -->
                 <button type="button" id="btnIniciarSesion">Iniciar</button>
             </form>
