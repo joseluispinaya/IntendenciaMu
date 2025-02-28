@@ -127,6 +127,7 @@
     <Content Include="Imagenes\logogm.jpg" />
     <Content Include="Imagenes\Sinfotop.png" />
     <Content Include="Inicio.aspx" />
+    <Content Include="js\FrmNotificacion.js" />
     <Content Include="js\FrmPropietario.js" />
     <Content Include="js\FrmUsuario.js" />
     <Content Include="js\Login.js" />

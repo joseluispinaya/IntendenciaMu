@@ -3,7 +3,7 @@ $(document).ready(function () {
     // Validar si existen tanto el token como el usuario en sessionStorage
     const tokenSesion = sessionStorage.getItem('tokenSesion');
     const usuarioL = sessionStorage.getItem('usuarioLo');
-    console.log(usuarioL);
+    //console.log(usuarioL);
 
     if (tokenSesion && usuarioL) {
         // Parsear el usuario almacenado

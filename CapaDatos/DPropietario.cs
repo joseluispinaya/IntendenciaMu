@@ -157,5 +157,69 @@ namespace CapaDatos
             }
         }
 
+        public Respuesta<EPropietario> BuscarPropieta(string NroCi)
+        {
+            try
+            {
+                EPropietario obj = null;
+
+                using (SqlConnection con = ConexionBD.GetInstance().ConexionDB())
+                {
+                    using (SqlCommand comando = new SqlCommand("usp_BuscarPropietario", con))
+                    {
+                        comando.CommandType = CommandType.StoredProcedure;
+                        comando.CommandTimeout = 30;
+                        comando.Parameters.AddWithValue("@NroCi", NroCi);
+
+                        con.Open();
+                        using (SqlDataReader dr = comando.ExecuteReader())
+                        {
+                            if (dr.HasRows && dr.Read())
+                            {
+                                obj = new EPropietario
+                                {
+                                    IdPropietario = Convert.ToInt32(dr["IdPropietario"]),
+                                    NroCi = dr["NroCi"].ToString(),
+                                    Nombres = dr["Nombres"].ToString(),
+                                    Apellidos = dr["Apellidos"].ToString(),
+                                    Celular = dr["Celular"].ToString(),
+                                    Activo = Convert.ToBoolean(dr["Activo"]),
+                                    FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"].ToString()).ToString("dd/MM/yyyy"),
+                                    VFechaRegistro = Convert.ToDateTime(dr["FechaRegistro"].ToString())
+                                };
+                            }
+                        }
+                    }
+                }
+
+                return new Respuesta<EPropietario>
+                {
+                    Estado = obj != null,
+                    Data = obj,
+                    Mensaje = obj != null ? "Propietario obtenido correctamente" : "El nro de ci no se encuentra registrado"
+                };
+            }
+            catch (SqlException ex)
+            {
+                // Manejo de excepciones relacionadas con la base de datos
+                return new Respuesta<EPropietario>
+                {
+                    Estado = false,
+                    Mensaje = "Error en la base de datos: " + ex.Message,
+                    Data = null
+                };
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones generales
+                return new Respuesta<EPropietario>
+                {
+                    Estado = false,
+                    Mensaje = "Ocurrió un error inesperado: " + ex.Message,
+                    Data = null
+                };
+            }
+        }
+
     }
 }

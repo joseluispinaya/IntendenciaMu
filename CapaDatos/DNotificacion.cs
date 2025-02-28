@@ -39,7 +39,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@IdPropietario", oNotificacion.IdPropietario);
                         cmd.Parameters.AddWithValue("@IdUsuario", oNotificacion.IdUsuario);
                         cmd.Parameters.AddWithValue("@Descripcion", oNotificacion.Descripcion);
-                        cmd.Parameters.AddWithValue("@FechaPresencia", oNotificacion.FechaPresencia);
+                        cmd.Parameters.AddWithValue("@FechaPresencia", oNotificacion.VFechaPresencia);
 
 
                         SqlParameter outputParam = new SqlParameter("@Resultado", SqlDbType.Int)

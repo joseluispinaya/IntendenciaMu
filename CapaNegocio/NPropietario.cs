@@ -39,5 +39,10 @@ namespace CapaNegocio
             return DPropietario.GetInstance().ObtenerPropietarios();
         }
 
+        public Respuesta<EPropietario> BuscarPropieta(string NroCi)
+        {
+            return DPropietario.GetInstance().BuscarPropieta(NroCi);
+        }
+
     }
 }
