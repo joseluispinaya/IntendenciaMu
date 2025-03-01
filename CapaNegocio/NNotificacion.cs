@@ -32,5 +32,20 @@ namespace CapaNegocio
         {
             return DNotificacion.GetInstance().RegistrarNotificacion(oNotificacion);
         }
+
+        public Respuesta<List<ENotificacion>> ObtenerNotificacionId(int Idpropietario)
+        {
+            return DNotificacion.GetInstance().ObtenerNotificacionId(Idpropietario);
+        }
+
+        public Respuesta<List<ENotificacion>> ObtenerNotificacionIdPrueba(int Idpropietario)
+        {
+            return DNotificacion.GetInstance().ObtenerNotificacionIdPrueba(Idpropietario);
+        }
+
+        public Respuesta<ENotificacion> ObtenerNotificacionPorIdReport(int IdNotifi)
+        {
+            return DNotificacion.GetInstance().ObtenerNotificacionPorIdReport(IdNotifi);
+        }
     }
 }

@@ -36,7 +36,7 @@ namespace CapaPresentacion
             }
             catch (Exception ex)
             {
-                return new Respuesta<EUsuario> { Estado = false, Valor = "Ocurrió un error: " + ex.Message };
+                return new Respuesta<EUsuario> { Estado = false, Mensaje = "Ocurrió un error: " + ex.Message };
                 //throw;
             }
         }

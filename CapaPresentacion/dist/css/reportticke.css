@@ -1,0 +1,57 @@
+﻿/*#usuariosContainer {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    width: 80mm;
+    padding: 5px;
+    border: 1px solid black;
+}
+
+h2, p {
+    margin: 5px 0;
+}
+
+hr {
+    border: 1px dashed black;
+}
+
+button {
+    display: block;
+    margin: 10px auto;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}*/
+
+@media print {
+    #Imprimir {
+        display: none;
+    }
+    /* Oculta el botón en la impresión */
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        text-align: center;
+    }
+
+    #usuariosContainer {
+        width: 80mm;
+        padding: 5px;
+        border: none;
+    }
+
+    hr {
+        border: 1px dashed black;
+        margin: 5px 0;
+    }
+
+    h2 {
+        margin: 5px 0;
+        font-size: 16px;
+    }
+
+    p {
+        margin: 2px 0;
+    }
+}

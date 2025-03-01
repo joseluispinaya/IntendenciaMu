@@ -82,6 +82,7 @@
     <Content Include="dist\css\cardstyle.css" />
     <Content Include="dist\css\inpfile.css" />
     <Content Include="dist\css\login.css" />
+    <Content Include="dist\css\reportticke.css" />
     <Content Include="dist\img\AdminLTELogo.png" />
     <Content Include="dist\img\avatar.png" />
     <Content Include="dist\img\avatar2.png" />
@@ -123,12 +124,14 @@
     <Content Include="dist\js\pages\dashboard3.js" />
     <Content Include="FrmNotificacion.aspx" />
     <Content Include="FrmPropietario.aspx" />
+    <Content Include="FrmReporteNot.aspx" />
     <Content Include="FrmUsuario.aspx" />
     <Content Include="Imagenes\logogm.jpg" />
     <Content Include="Imagenes\Sinfotop.png" />
     <Content Include="Inicio.aspx" />
     <Content Include="js\FrmNotificacion.js" />
     <Content Include="js\FrmPropietario.js" />
+    <Content Include="js\FrmReporteNot.js" />
     <Content Include="js\FrmUsuario.js" />
     <Content Include="js\Login.js" />
     <Content Include="js\Master.js" />
@@ -1987,6 +1990,13 @@
     </Compile>
     <Compile Include="FrmPropietario.aspx.designer.cs">
       <DependentUpon>FrmPropietario.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FrmReporteNot.aspx.cs">
+      <DependentUpon>FrmReporteNot.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FrmReporteNot.aspx.designer.cs">
+      <DependentUpon>FrmReporteNot.aspx</DependentUpon>
     </Compile>
     <Compile Include="FrmUsuario.aspx.cs">
       <DependentUpon>FrmUsuario.aspx</DependentUpon>

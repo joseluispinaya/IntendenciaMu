@@ -53,6 +53,26 @@ namespace CapaPresentacion
         }
 
         [WebMethod]
+        public static Respuesta<List<ENotificacion>> ObtenerListaNotifiId(int IdPropi)
+        {
+            try
+            {
+                Respuesta<List<ENotificacion>> Lista = NNotificacion.GetInstance().ObtenerNotificacionIdPrueba(IdPropi);
+                return Lista;
+            }
+            catch (Exception ex)
+            {
+                // Maneja cualquier error inesperado
+                return new Respuesta<List<ENotificacion>>()
+                {
+                    Estado = false,
+                    Mensaje = "Error al obtener las Notificaciones: " + ex.Message,
+                    Data = null
+                };
+            }
+        }
+
+        [WebMethod]
         public static Respuesta<int> Guardar(ENotificacion oNotificacion)
         {
             try
@@ -77,6 +97,35 @@ namespace CapaPresentacion
             catch (Exception ex)
             {
                 return new Respuesta<int> { Estado = false, Mensaje = "Ocurrió un error: " + ex.Message };
+            }
+        }
+
+        [WebMethod]
+        public static Respuesta<ENotificacion> ReporteNotificacion(int IdNotifi)
+        {
+            try
+            {
+                Respuesta<ENotificacion> respuesta = NNotificacion.GetInstance().ObtenerNotificacionPorIdReport(IdNotifi);
+
+                if (respuesta == null || respuesta.Data == null)
+                {
+                    return new Respuesta<ENotificacion>
+                    {
+                        Estado = false,
+                        Mensaje = "Ocurrio un problema con la Notificacion"
+                    };
+                }
+                return new Respuesta<ENotificacion>
+                {
+                    Estado = true,
+                    Data = respuesta.Data,
+                    Mensaje = "Notificacion encontrada"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta<ENotificacion> { Estado = false, Mensaje = "Ocurrió un error: " + ex.Message };
+                //throw;
             }
         }
     }

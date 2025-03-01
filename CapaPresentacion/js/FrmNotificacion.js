@@ -42,6 +42,69 @@ function cargarNotificador() {
     }
 }
 
+var listaNotifiObj = [];
+
+function obtenerListaNotifiporId(IdPropi) {
+    var request = { IdPropi: IdPropi };
+
+    $.ajax({
+        type: "POST",
+        url: "FrmNotificacion.aspx/ObtenerListaNotifiId",
+        data: JSON.stringify(request),
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+            if (response.d.Estado) {
+                listaNotifiObj = response.d.Data;
+
+                var listaNotifi = response.d.Data;
+                $("#totalnotif a").text(listaNotifi.length);
+
+                var html = '';
+
+                listaNotifi.forEach(function (notificacion) {
+                    var fechaRegistro = notificacion.FechaRegistro;
+                    var codigo = notificacion.Codigo;
+                    var descripcion = notificacion.Descripcion;
+                    var idNotificacion = notificacion.IdNotificacion;
+                    var activo = notificacion.Activo;
+
+                    var bgClass = activo ? "bg-danger" : "bg-success";
+                    var estadoTexto = activo ? "Estado: Activo" : "Estado: No Activo";
+
+                    html += `
+                        <div class="time-label">
+                            <span class="${bgClass}">${fechaRegistro}</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-file bg-primary"></i>
+                            <div class="timeline-item">
+                                <span class="time"><i class="far fa-clock"></i> ${estadoTexto}</span>
+                                <h3 class="timeline-header"><a href="#">Código Notificación</a> ${codigo}</h3>
+                                <div class="timeline-body">${descripcion}</div>
+                                <div class="timeline-footer">
+                                    <a href="#" class="btn btn-primary btn-sm" onclick="verDetalle(${idNotificacion})">Ver Detalle</a>
+                                    <a href="#" class="btn btn-success btn-sm" onclick="ImprimirNot(${idNotificacion})">Imprimir</a>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+
+                $("#UilistNot").html(html); // Insertamos el HTML generado en el contenedor
+            } else {
+                $("#UilistNot").html(""); // Limpia el contenido
+                $("#totalnotif a").text("0");
+                swal("Mensaje", response.d.Mensaje, "warning");
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            $("#totalnotif a").text("0");
+            console.log(xhr.status + " \n" + xhr.responseText, "\n" + thrownError);
+        }
+    });
+}
+
+
 function buscarPropietario() {
 
     //data: JSON.stringify({ Nroci: $("#nrocipropi").val().trim() }),
@@ -62,7 +125,17 @@ function buscarPropietario() {
                 $("#nompropi").text(response.d.Data.Nombres);
                 $("#apellpropi").text(response.d.Data.Apellidos);
                 $("#txtIdpopiet").val(response.d.Data.IdPropietario);
+
+                var iddeProp = parseInt($("#txtIdpopiet").val());
+                if (iddeProp !== 0) {
+                    obtenerListaNotifiporId(iddeProp);
+                } else {
+                    $("#UilistNot").html(""); // Limpia el contenido si el ID es 0
+                }
+
             } else {
+                $("#UilistNot").html("");
+                $("#totalnotif a").text("0");
                 swal("Mensaje", response.d.Mensaje, "warning");
             }
 
@@ -72,6 +145,32 @@ function buscarPropietario() {
             console.log(xhr.status + " \n" + xhr.responseText, "\n" + thrownError);
         }
     });
+}
+
+// Función para manejar el evento de "Ver Afiliados"
+function verDetalle(idNotificacion) {
+    console.log("Ver ID: " + idNotificacion);
+    //var url = 'ReporteAsociaAfi.aspx?id=' + Idasoci;
+    //window.open(url, '', 'height=700,width=900,scrollbars=0,location=1,toolbar=0');
+
+    // Por ejemplo, redirigir a otra página:
+    // window.location.href = "VerAfiliados.aspx?Idasoci=" + Idasoci;
+}
+
+function ImprimirNot(idNotificacion) {
+
+    var url = 'FrmReporteNot.aspx?id=' + idNotificacion;
+    //var url = 'FrmReporteNot.aspx';
+    window.open(url, '', 'height=600,width=800,scrollbars=0,location=1,toolbar=0');
+
+    //var notificacion = listaNotifiObj.find(n => n.IdNotificacion === idNotificacion);
+
+    //if (notificacion) {
+    //    console.log("Detalles de la Notificación:", notificacion);
+    //} else {
+    //    console.log("No se encontró la notificación con ID:", idNotificacion);
+    //}
+
 }
 
 $('#btnBuscar').on('click', function () {
@@ -107,6 +206,14 @@ function registerDataNotificacion() {
         success: function (response) {
             $("#loadregi").LoadingOverlay("hide");
             if (response.d.Estado) {
+                var iddeProp = parseInt($("#txtIdpopiet").val());
+
+                if (iddeProp !== 0) {
+                    obtenerListaNotifiporId(iddeProp);
+                } else {
+                    $("#UilistNot").html(""); // Limpia el contenido si el ID es 0
+                }
+
                 let smss = `${response.d.Mensaje} Id: ${response.d.Valor}`;
                 swal("Mensaje", smss, "success");
                 //swal("Mensaje", response.d.Mensaje, "success");
