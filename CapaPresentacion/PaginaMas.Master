@@ -153,6 +153,15 @@
                                 </p>
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="FrmPanelNotificacio.aspx" class="nav-link">
+                                <i class="nav-icon fas fa-th"></i>
+                                <p>
+                                    Panel Notificacion
+                                </p>
+                            </a>
+                        </li>
                         
                         <li class="nav-header">LABELS</li>
                         <li class="nav-item">

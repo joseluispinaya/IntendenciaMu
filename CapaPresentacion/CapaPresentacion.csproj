@@ -123,6 +123,7 @@
     <Content Include="dist\js\pages\dashboard2.js" />
     <Content Include="dist\js\pages\dashboard3.js" />
     <Content Include="FrmNotificacion.aspx" />
+    <Content Include="FrmPanelNotificacio.aspx" />
     <Content Include="FrmPropietario.aspx" />
     <Content Include="FrmReporteNot.aspx" />
     <Content Include="FrmUsuario.aspx" />
@@ -133,6 +134,7 @@
     <Content Include="Imagenes\Sinfotop.png" />
     <Content Include="Inicio.aspx" />
     <Content Include="js\FrmNotificacion.js" />
+    <Content Include="js\FrmPanelNotificacio.js" />
     <Content Include="js\FrmPropietario.js" />
     <Content Include="js\FrmReporteNot.js" />
     <Content Include="js\FrmUsuario.js" />
@@ -1986,6 +1988,13 @@
     </Compile>
     <Compile Include="FrmNotificacion.aspx.designer.cs">
       <DependentUpon>FrmNotificacion.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FrmPanelNotificacio.aspx.cs">
+      <DependentUpon>FrmPanelNotificacio.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FrmPanelNotificacio.aspx.designer.cs">
+      <DependentUpon>FrmPanelNotificacio.aspx</DependentUpon>
     </Compile>
     <Compile Include="FrmPropietario.aspx.cs">
       <DependentUpon>FrmPropietario.aspx</DependentUpon>

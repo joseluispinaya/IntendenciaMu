@@ -21,16 +21,18 @@
         <img src="Imagenes/reportelo.png" />
         <h2>Notificación</h2>
         <p><b>Nro notificacion:</b> <span id="codigo"></span></p>
-        <p class="sectionti">DETALLE NOTIFICADO</p>
-        <hr/>
+        <hr />
+        <p class="sectionti">*** DETALLE DEL NOTIFICADO ***</p>
         <p><b>Descripción:</b> <span id="descripcion"></span></p>
-        <p><b>Presentarse el:</b> <span id="fechaPresencia"></span></p>
-        <hr/>
         <p><b>Propietario:</b> <span id="propietario"></span></p>
         <p><b>Celular:</b> <span id="celular"></span></p>
-        <p><b>Usuario:</b> <span id="usuario"></span></p>
+        <p><b>Presentarse el:</b> <span id="fechaPresencia"></span></p>
+        <hr />
+        <p class="sectionti">*** DETALLE DE LA NOTIFICACION ***</p>
+        <p><b>Funcionario:</b> <span id="usuario"></span></p>
+        <p><b>Fecha Notificacion:</b> <span id="fechaRegisno"></span></p>
         <hr/>
-        <p>*** Fin del Reporte ***</p>
+        <p class="firma">*** Firma del notificado ***</p>
     </div>
 
     <script src="plugins/jquery/jquery.min.js"></script>

@@ -62,9 +62,15 @@ button {
         margin: 2px 0;
     }
 
-    p.sectionti {
-        margin: 5px 0;
-        font-size: 14px;
-        /*font-weight: bold;*/
-    }
+        p.sectionti {
+            margin: 5px 0;
+            font-size: 12px;
+            /*font-weight: bold;*/
+        }
+
+        p.firma {
+            margin: 40px 0 0 0; /* Arriba 20px, Derecha 0px, Abajo 0px, Izquierda 0px */
+            font-size: 14px;
+            /*font-weight: bold;*/
+        }
 }

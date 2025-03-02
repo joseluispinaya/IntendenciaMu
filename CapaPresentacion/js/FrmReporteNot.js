@@ -6,7 +6,7 @@ $(document).ready(function () {
     const IdNotifi = urlParams.get('id')
 
     if (IdNotifi !== null) {
-        CargarDatos(IdNotifi);
+        CargarDatosOrio(IdNotifi);
     } else {
         alert("No hay parámetro recibido. El formulario se cerrará.");
         window.close();
@@ -38,6 +38,7 @@ async function CargarDatos(IdNotifi) {
             $("#propietario").text(notificacionData.Propietario.Nombres + " " + notificacionData.Propietario.Apellidos);
             $("#celular").text(notificacionData.Propietario.Celular);
             $("#usuario").text(notificacionData.Usuario.Nombres + " " + notificacionData.Usuario.Apellidos);
+            $("#fechaRegisno").text(notificacionData.FechaRegistro);
         } else {
             alert("Ocurrió un error. El formulario se cerrará.");
             window.close();
@@ -59,23 +60,29 @@ function CargarDatosOrio(IdNotifi) {
         data: JSON.stringify(request),
         contentType: 'application/json; charset=utf-8',
         dataType: "json",
+        beforeSend: function () {
+            $.LoadingOverlay("show");
+        },
         success: function (response) {
+            $.LoadingOverlay("hide");
+
             if (response.d.Estado) {
                 var notificacionData = response.d.Data;
 
-                // Llenar los campos del ticket
                 $("#codigo").text(notificacionData.Codigo);
                 $("#descripcion").text(notificacionData.Descripcion);
                 $("#fechaPresencia").text(notificacionData.FechaPresencia);
                 $("#propietario").text(notificacionData.Propietario.Nombres + " " + notificacionData.Propietario.Apellidos);
                 $("#celular").text(notificacionData.Propietario.Celular);
                 $("#usuario").text(notificacionData.Usuario.Nombres + " " + notificacionData.Usuario.Apellidos);
+                $("#fechaRegisno").text(notificacionData.FechaRegistro);
             } else {
                 alert("Ocurrió un error. El formulario se cerrará.");
                 window.close();
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {
+            $.LoadingOverlay("hide");
             console.log(xhr.status + " \n" + xhr.responseText, "\n" + thrownError);
         }
     });
@@ -124,7 +131,7 @@ function imprSelec(nombre) {
         // Espera un poco más para cerrar después de la impresión
         setTimeout(function () {
             ventanaImpresion.close();
-        }, 1000); // Ajusta el tiempo si es necesario
+        }, 700); // Ajusta el tiempo si es necesario
 
     }, 500);
 }
