@@ -41,6 +41,13 @@ button {
         border: none;
     }
 
+        #usuariosContainer img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
     hr {
         border: 1px dashed black;
         margin: 5px 0;
@@ -53,5 +60,11 @@ button {
 
     p {
         margin: 2px 0;
+    }
+
+    p.sectionti {
+        margin: 5px 0;
+        font-size: 14px;
+        /*font-weight: bold;*/
     }
 }

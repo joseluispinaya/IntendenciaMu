@@ -18,11 +18,13 @@
     <br/>
 
     <div id="usuariosContainer">
+        <img src="Imagenes/reportelo.png" />
         <h2>Notificación</h2>
-        <p><b>Código:</b> <span id="codigo"></span></p>
+        <p><b>Nro notificacion:</b> <span id="codigo"></span></p>
+        <p class="sectionti">DETALLE NOTIFICADO</p>
         <hr/>
         <p><b>Descripción:</b> <span id="descripcion"></span></p>
-        <p><b>Fecha Presencia:</b> <span id="fechaPresencia"></span></p>
+        <p><b>Presentarse el:</b> <span id="fechaPresencia"></span></p>
         <hr/>
         <p><b>Propietario:</b> <span id="propietario"></span></p>
         <p><b>Celular:</b> <span id="celular"></span></p>
@@ -32,6 +34,7 @@
     </div>
 
     <script src="plugins/jquery/jquery.min.js"></script>
+    <script src="plugins/loadingoverlay/loadingoverlay.min.js"></script>
     <script src="js/FrmReporteNot.js" type="text/javascript"></script>
 </body>
 </html>

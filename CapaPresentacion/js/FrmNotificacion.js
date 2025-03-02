@@ -159,8 +159,8 @@ function verDetalle(idNotificacion) {
 
 function ImprimirNot(idNotificacion) {
 
-    var url = 'FrmReporteNot.aspx?id=' + idNotificacion;
-    //var url = 'FrmReporteNot.aspx';
+    //var url = 'FrmReporteNot.aspx?id=' + idNotificacion;
+    var url = 'FrmReporteNot.aspx?id=' + idNotificacion + '&t=' + new Date().getTime();
     window.open(url, '', 'height=600,width=800,scrollbars=0,location=1,toolbar=0');
 
     //var notificacion = listaNotifiObj.find(n => n.IdNotificacion === idNotificacion);

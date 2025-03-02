@@ -127,6 +127,9 @@
     <Content Include="FrmReporteNot.aspx" />
     <Content Include="FrmUsuario.aspx" />
     <Content Include="Imagenes\logogm.jpg" />
+    <Content Include="Imagenes\logointen.png" />
+    <Content Include="Imagenes\logoreport.png" />
+    <Content Include="Imagenes\reportelo.png" />
     <Content Include="Imagenes\Sinfotop.png" />
     <Content Include="Inicio.aspx" />
     <Content Include="js\FrmNotificacion.js" />
