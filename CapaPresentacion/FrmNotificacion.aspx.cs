@@ -128,5 +128,28 @@ namespace CapaPresentacion
                 //throw;
             }
         }
+
+        [WebMethod]
+        public static Respuesta<bool> CancelarNotifi(int IdNotifi, bool Activo)
+        {
+            try
+            {
+                if (Activo)
+                {
+                    return new Respuesta<bool> { Estado = false, Mensaje = "Datos de notificación no puede ser verdadro." };
+                }
+                //var idd = 1;
+                return new Respuesta<bool>
+                {
+                    Estado = true,
+                    Mensaje = "Notificacion Cancelada con exito"
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta<bool> { Estado = false, Mensaje = "Ocurrió un error: " + ex.Message };
+            }
+        }
     }
 }
