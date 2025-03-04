@@ -47,5 +47,10 @@ namespace CapaNegocio
         {
             return DNotificacion.GetInstance().ObtenerNotificacionPorIdReport(IdNotifi);
         }
+
+        public Respuesta<bool> CancelarNotificacion(int IdNoti)
+        {
+            return DNotificacion.GetInstance().CancelarNotificacion(IdNoti);
+        }
     }
 }

@@ -58,6 +58,9 @@ function obtenerListaNotifiporId(IdPropi) {
                 listaNotifiObj = response.d.Data;
 
                 var listaNotifi = response.d.Data;
+                var countActivo = listaNotifi.filter(n => n.Activo).length;
+                let valNotica = Number(countActivo);
+
                 $("#totalnotif a").text(listaNotifi.length);
 
                 var html = '';
@@ -70,7 +73,7 @@ function obtenerListaNotifiporId(IdPropi) {
                     var activo = notificacion.Activo;
 
                     var bgClass = activo ? "bg-danger" : "bg-success";
-                    var estadoTexto = activo ? "Estado: Activo" : "Estado: No Activo";
+                    var estadoTexto = activo ? "Estado: Activo" : "Estado: Cancelado";
 
                     html += `
                         <div class="time-label">
@@ -91,6 +94,11 @@ function obtenerListaNotifiporId(IdPropi) {
                 });
 
                 $("#UilistNot").html(html); // Insertamos el HTML generado en el contenedor
+
+                if (valNotica >= 2) {
+                    swal("Alerta", "El propietario esta por ser clausurado por exeso de notificaciones", "error");
+                }
+
             } else {
                 $("#UilistNot").html(""); // Limpia el contenido
                 $("#totalnotif a").text("0");

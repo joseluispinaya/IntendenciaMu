@@ -45,7 +45,7 @@
               <div class="info-box-content">
                 <%--<span class="info-box-number">Detalle:</span>--%>
                 <span class="info-box-text">Notificaciones</span>
-                <span class="info-box-number" id="noacticoun">No Activas 0</span>
+                <span class="info-box-number" id="noacticoun">Canceladas 0</span>
               </div>
             </div>
           </div>
@@ -55,7 +55,7 @@
     </div>
 
     <div class="modal fade" id="modaldetallenotif" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 id="myLarlLabel" class="modal-title">Detalle Notificacion</h4>
@@ -65,36 +65,34 @@
                 </div>
                 <div class="modal-body">
                     <input id="txtIdNotificaa" name="IdPropietario" value="0" type="hidden" />
+                    <input id="valorEstado" type="hidden" />
                     <div class="row">
                         <div class="col-md-7">
                             <div class="row">
-                            <div class="col-md-7">
-                              <h2 class="lead" id="propietariod"><b>Nombre propietario</b></h2>
-                                <p id="prebaa" class="text-muted text-sm"><b>Detalle: </b>descripcion de la notificacion de Intendencia municipal </p>
-                              
+                                <h5 id="propietariod" style="font-size: 1rem; margin-bottom: 0.2rem;">Nombre propietario</h5>
+                              <%--<h2 class="lead" id="propietariod"><b>Nombre propietario</b></h2>--%>
+                              <p id="prebaa" class="text-muted text-sm"><b>Detalle: </b>descripcion de la notificacion de Intendencia municipal </p>
+  
                               <ul class="ml-4 mb-0 fa-ul text-muted">
-                                <li id="fechanoti" class="small"><span class="fa-li"><i class="fas fa-lg fa-file"></i></span> Fecha : correo@gmail.com</li>
+                                <li id="fechanoti" class="small"><span class="fa-li"><i class="fas fa-lg fa-clock"></i></span> Fecha : correo@gmail.com</li>
                                 <li id="codiNoti" class="small"><span class="fa-li"><i class="fas fa-lg fa-envelope"></i></span> Codigo: 73999726</li>
-                                <li id="estadono" class="small"><span class="fa-li"><i class="fas fa-lg fa-clock"></i></span> Estado: 73999726</li>
+                                <li id="estadono" class="small"><span class="fa-li"><i class="fas fa-lg fa-file"></i></span> Estado: 73999726</li>
                             </ul>
-                            </div>
-                            <div class="col-md-5">
-                              <p class="text-muted text-sm"><b>Detalle: </b>descripcion de la notificacion de Intendencia municipal </p>
-                            </div>
                           </div>
                         </div>
                         <div class="col-md-5">
-                            <h2 class="lead" id="notificadorn"><b>Nombre notificador</b></h2>
-                            <p class="text-muted text-sm"><b>Cargo: </b>Notificador dependiente de Intendencia municipal </p>
+                            <%--<h2 class="lead" id="notificadorn"><b>Nombre notificador</b></h2>--%>
+                            <h5 style="font-size: 1rem; margin-bottom: 0.2rem;">Detalle Notificador</h5>
+                            <p id="notifidetaa" class="text-muted text-sm"><b>Cargo: </b>Notificador dependiente de Intendencia municipal </p>
                             <ul class="ml-4 mb-0 fa-ul text-muted">
-                                <li class="small"><span class="fa-li"><i class="fas fa-lg fa-envelope"></i></span> Correo: correo@gmail.com</li>
+                                <li id="fecharegissn" class="small"><span class="fa-li"><i class="fas fa-lg fa-clock"></i></span> Fecha: correo@gmail.com</li>
                                 <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Celular: 73999726</li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-primary" id="btnGuardarCambiosNot">Cancelar Notificacion</button>
                 </div>
             </div>

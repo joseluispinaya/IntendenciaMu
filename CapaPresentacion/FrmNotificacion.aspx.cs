@@ -129,6 +129,7 @@ namespace CapaPresentacion
             }
         }
 
+        // sin usar solo pruebas
         [WebMethod]
         public static Respuesta<bool> CancelarNotifi(int IdNotifi, bool Activo)
         {
@@ -136,13 +137,37 @@ namespace CapaPresentacion
             {
                 if (Activo)
                 {
-                    return new Respuesta<bool> { Estado = false, Mensaje = "Datos de notificación no puede ser verdadro." };
+                    return new Respuesta<bool> { Estado = false, Mensaje = "El estado de la notificacion no puede ser verdadero." };
                 }
-                //var idd = 1;
+                Respuesta<bool> respuesta = NNotificacion.GetInstance().CancelarNotificacion(IdNotifi);
+                return respuesta;
+
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta<bool> { Estado = false, Mensaje = "Ocurrió un error: " + ex.Message };
+            }
+        }
+
+        // sin usar solo pruebas
+        [WebMethod]
+        public static Respuesta<bool> CancelarNotifiPruebas(int IdNotifi, bool Activo)
+        {
+            try
+            {
+                if (IdNotifi <= 0)
+                {
+                    return new Respuesta<bool> { Estado = false, Mensaje = "El ID de notificación inválido." };
+                }
+
+                if (!Activo)
+                {
+                    return new Respuesta<bool> { Estado = false, Mensaje = "El estado de la notificacion no puede ser verdadero." };
+                }
                 return new Respuesta<bool>
                 {
                     Estado = true,
-                    Mensaje = "Notificacion Cancelada con exito"
+                    Mensaje = $"Notificacion Cancelada con exito: {IdNotifi}"
                 };
 
             }
@@ -151,5 +176,40 @@ namespace CapaPresentacion
                 return new Respuesta<bool> { Estado = false, Mensaje = "Ocurrió un error: " + ex.Message };
             }
         }
+
+        [WebMethod]
+        public static Respuesta<bool> CancelarNotifiMejor(int IdNotifi, bool Activo)
+        {
+            var respuesta = new Respuesta<bool>();
+
+            try
+            {
+                if (IdNotifi <= 0)
+                {
+                    respuesta.Estado = false;
+                    respuesta.Mensaje = "ID de notificación inválido.";
+                    return respuesta;
+                }
+
+                if (!Activo)
+                {
+                    respuesta.Estado = false;
+                    respuesta.Mensaje = "El estado de la notificación ya esta cancelada.";
+                    return respuesta;
+                }
+
+                // Intentar cancelar la notificación
+                respuesta = NNotificacion.GetInstance().CancelarNotificacion(IdNotifi);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Estado = false;
+                respuesta.Mensaje = $"Ocurrió un error: {ex.Message}";
+                // Opcional: Loggear error con ex.ToString() para más detalles
+            }
+
+            return respuesta;
+        }
+
     }
 }

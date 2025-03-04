@@ -67,6 +67,10 @@ function obtenerNotificaciones(IdPropi) {
 
                 if (listaNotifi.length === 0) {
                     // Si no hay notificaciones, mostrar el mensaje
+
+                    $("#acticoun").text("Activas: 0");
+                    $("#noacticoun").text("Canceladas: 0");
+
                     //<div class="col-sm-4 d-flex justify-content-center">
                     cardContainer.html(`
                         <div class="col-sm-6 offset-sm-3 col-md-4 offset-md-4">
@@ -79,7 +83,7 @@ function obtenerNotificaciones(IdPropi) {
                                     <i class="fas fa-calendar"></i>
                                 </div>
                                 <a href="#" class="small-box-footer">
-                                    More info <i class="fas fa-arrow-circle-right"></i>
+                                    Ver mas <i class="fas fa-arrow-circle-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -94,7 +98,9 @@ function obtenerNotificaciones(IdPropi) {
                 }, { countActivo: 0, countNoActivo: 0 });
 
                 $("#acticoun").text("Activas: " + countActivo);
-                $("#noacticoun").text("No Activas: " + countNoActivo);
+                $("#noacticoun").text("Canceladas: " + countNoActivo);
+
+                let valNotica = Number(countActivo);
 
 
                 // Generar tarjetas
@@ -126,10 +132,14 @@ function obtenerNotificaciones(IdPropi) {
                     cardContainer.append(cardHtml); // Agregamos directamente al contenedor sin crear filas adicionales
                 });
 
+                if (valNotica >= 3) {
+                    swal("Alerta", "El propietario ya tiene un exedente de notificaciones", "error");
+                }
+
             } else {
                 // Si la respuesta no es válida, mostrar mensaje vacío
                 cardContainer.html(`
-                    <div class="col-sm-4 d-flex justify-content-center">
+                    <div class="col-sm-6 offset-sm-3 col-md-4 offset-md-4">
                         <div class="small-box bg-warning text-center">
                             <div class="inner">
                                 <h3>0<sup style="font-size: 20px"> Notificaciones</sup></h3>
@@ -146,7 +156,7 @@ function obtenerNotificaciones(IdPropi) {
                 `);
 
                 $("#acticoun").text("Activas: 0");
-                $("#noacticoun").text("No Activas: 0");
+                $("#noacticoun").text("Canceladas: 0");
 
                 swal("Mensaje", "Ocurrio un error intente mas tarde", "warning");
                 //swal("Mensaje", response.d.Mensaje, "warning");
@@ -162,7 +172,7 @@ function obtenerNotificaciones(IdPropi) {
 function limpiarNotificaciones() {
     $("#cardnoti").empty();
     $("#acticoun").text("Activas: 0");
-    $("#noacticoun").text("No Activas: 0");
+    $("#noacticoun").text("Canceladas: 0");
 
     $("#txtIdpopietpa").val("0");
     $("#panameprop").text("Nombre Notificado");
@@ -265,16 +275,29 @@ function CargarDatosDetalle(IdNotifi) {
                 var activo = notificacionData.Activo;
                 var estadoTexto = activo ? "Estado: Activo" : "Estado: No Activo";
 
+                
+                var minus = notificacionData.Propietario.Nombres + " " + notificacionData.Propietario.Apellidos;
+                var mayus = minus.toUpperCase();
+
+                var minususu = notificacionData.Usuario.Nombres + " " + notificacionData.Usuario.Apellidos;
+                var mayususu = minususu.toUpperCase();
+
+                $("#valorEstado").val(activo ? 1 : 0);
+
                 $("#txtIdNotificaa").val(notificacionData.IdNotificacion);
-                $("#propietariod").text(notificacionData.Propietario.Nombres + " " + notificacionData.Propietario.Apellidos);
-                //$("#descripcionn").text(notificacionData.Descripcion);
-                $("#fechanoti").html(`<span class="fa-li"><i class="fas fa-lg fa-file"></i></span> Fecha: ${notificacionData.FechaPresencia}`);
+                $("#propietariod").text(mayus);
+                //$("#propietariod").text(notificacionData.Propietario.Nombres + " " + notificacionData.Propietario.Apellidos);
+                $("#fechanoti").html(`<span class="fa-li"><i class="fas fa-lg fa-clock"></i></span> Fecha: ${notificacionData.FechaPresencia}`);
                 $("#codiNoti").html(`<span class="fa-li"><i class="fas fa-lg fa-envelope"></i></span> Codigo: ${notificacionData.Codigo}`);
-                $("#estadono").html(`<span class="fa-li"><i class="fas fa-lg fa-clock"></i></span> ${estadoTexto}`);
+                $("#estadono").html(`<span class="fa-li"><i class="fas fa-lg fa-file"></i></span> ${estadoTexto}`);
+
+                //$("#notifidetaa").html(`<b>Notificador: </b> ${notificacionData.Usuario.Nombres} ${notificacionData.Usuario.Apellidos} personal de intendencia`);
+                $("#notifidetaa").html(`<b>Notificador: </b> ${mayususu} personal de intendencia`);
+                $("#fecharegissn").html(`<span class="fa-li"><i class="fas fa-lg fa-clock"></i></span> Emitido el: ${notificacionData.FechaRegistro}`);
 
                 $("#prebaa").html(`<b>Detalle: </b> ${notificacionData.Descripcion}`);
 
-                $("#notificadorn").text(notificacionData.Usuario.Nombres + " " + notificacionData.Usuario.Apellidos);
+                /*$("#notificadorn").text(notificacionData.Usuario.Nombres + " " + notificacionData.Usuario.Apellidos);*/
 
                 $("#modaldetallenotif").modal("show");
             } else {
@@ -293,16 +316,13 @@ $('#btnPanelBuscar').on('click', function () {
     buscarPropietariopa();
 });
 
-function cancelarDataNotificacion() {
+function cancelarDataNotificacion(idNotifi, estadonoti) {
 
-    var request = {
-        IdNotifi: parseInt($("#txtIdNotificaa").val()),
-        Activo: false
-    };
+    const request = { IdNotifi: idNotifi, Activo: estadonoti };
 
     $.ajax({
         type: "POST",
-        url: "FrmNotificacion.aspx/CancelarNotifi",
+        url: "FrmNotificacion.aspx/CancelarNotifiMejor",
         data: JSON.stringify(request),
         contentType: 'application/json; charset=utf-8',
         dataType: "json",
@@ -331,11 +351,24 @@ function cancelarDataNotificacion() {
 
 $('#btnGuardarCambiosNot').on('click', function () {
 
-    if (parseInt($("#txtIdNotificaa").val()) === 0) {
-        swal("Mensaje", "Debe Seleccionar una notificacion", "warning")
-        return;
+    const idNotifi = Number($("#txtIdNotificaa").val());
+    const estadonoti = $("#valorEstado").val() === "1"; // Ya es booleano
+
+    if (idNotifi === 0) {
+        return swal("Mensaje", "Debe seleccionar una notificación", "warning");
     }
 
-    cancelarDataNotificacion();
+    if (!estadonoti) {
+        return swal("Mensaje", "La Notificación seleccionada ya se encuentra cancelada", "warning");
+    }
+
+    cancelarDataNotificacion(idNotifi, estadonoti);
+
+    //if (parseInt($("#txtIdNotificaa").val()) === 0) {
+    //    swal("Mensaje", "Debe Seleccionar una notificacion", "warning")
+    //    return;
+    //}
+
+    //cancelarDataNotificacion();
 
 });
