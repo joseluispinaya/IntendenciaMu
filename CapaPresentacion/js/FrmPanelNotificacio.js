@@ -1,4 +1,91 @@
 ﻿
+
+$(document).ready(function () {
+    cargarPropietarios();
+
+});
+
+//para filtro de propietario
+
+function cargarPropietarios() {
+
+    $("#cboBuscarPropi").select2({
+        ajax: {
+            url: "FrmPropietario.aspx/ObtenerPropietariosFiltro",
+            dataType: 'json',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            delay: 250,
+            data: function (params) {
+                return JSON.stringify({ busqueda: params.term });
+            },
+            processResults: function (data) {
+                //console.log("Datos recibidos:", data.d.objeto);
+                return {
+                    results: data.d.Data.map((item) => ({
+                        id: item.IdPropietario,
+                        text: item.Nombres,
+                        Apellidos: item.Apellidos,
+                        NroCi: item.NroCi,
+                        propietario: item
+                    }))
+                };
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status + " \n" + xhr.responseText, "\n" + thrownError);
+            }
+        },
+        language: "es",
+        placeholder: 'Buscar propietario',
+        minimumInputLength: 1,
+        templateResult: formatoResultados
+    });
+}
+
+function formatoResultados(data) {
+
+    var imagenes = "Imagenes/selectlo.jpg";
+    // Esto es por defecto, ya que muestra el "buscando..."
+    if (data.loading)
+        return data.text;
+
+    var contenedor = $(
+        `<table width="100%">
+            <tr>
+                <td style="width:60px">
+                    <img style="height:60px;width:60px;margin-right:10px" src="${imagenes}"/>
+                </td>
+                <td>
+                    <p style="font-weight: bolder;margin:2px">${data.text} ${data.Apellidos}</p>
+                    <p style="margin:2px">CI: ${data.NroCi}</p>
+                </td>
+            </tr>
+        </table>`
+    );
+
+    return contenedor;
+}
+
+$(document).on("select2:open", function () {
+    document.querySelector(".select2-search__field").focus();
+
+});
+
+$("#cboBuscarPropi").on("select2:select", function (e) {
+
+    var data = e.params.data.propietario;
+
+    $("#panameprop").text(`${data.Nombres} ${data.Apellidos}`);
+    $("#nrocell").text(data.Celular);
+    $("#txtIdpopietpa").val(data.IdPropietario);
+    $("#txtNroci").val(data.NroCi);
+
+    obtenerNotificaciones(data.IdPropietario);
+
+    $("#cboBuscarPropi").val("").trigger("change")
+    //console.log(data);
+});
+
 function buscarPropietariopa() {
 
     var nroCi = $("#txtNroci").val().trim(); // Evitar espacios en blanco
@@ -106,7 +193,8 @@ function obtenerNotificaciones(IdPropi) {
                 // Generar tarjetas
                 listaNotifi.forEach(function (notificacion) {
                     var activo = notificacion.Activo;
-                    var infobgClass = activo ? "info-box bg-success" : "info-box bg-danger";
+                    //var infobgClass = activo ? "info-box bg-success" : "info-box bg-danger";
+                    var infobgClass = activo ? "info-box bg-danger" : "info-box bg-success";
                     var estadoTexto = activo ? "Estado: Activo" : "Estado: No Activo";
 
                     // Estructura del card
@@ -311,10 +399,10 @@ function CargarDatosDetalle(IdNotifi) {
 
 }
 
-$('#btnPanelBuscar').on('click', function () {
+//$('#btnPanelBuscar').on('click', function () {
 
-    buscarPropietariopa();
-});
+//    buscarPropietariopa();
+//});
 
 function cancelarDataNotificacion(idNotifi, estadonoti) {
 

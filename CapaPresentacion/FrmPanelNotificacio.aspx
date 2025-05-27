@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PaginaMas.Master" AutoEventWireup="true" CodeBehind="FrmPanelNotificacio.aspx.cs" Inherits="CapaPresentacion.FrmPanelNotificacio" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link rel="stylesheet" href="plugins/selectzero2/select2.min.css">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" runat="server">
     <div class="row">
@@ -8,16 +9,21 @@
               <span class="info-box-icon bg-info"><i class="fas fa-search"></i></span>
 
               <div class="info-box-content">
-                  <%--<span class="info-box-number">Nro CI:</span>--%>
-                <input type="text" class="form-control form-control-sm mb-2" id="txtNroci" name="Nro CI" placeholder="Nro cedula">
-                <button type="button" id="btnPanelBuscar" class="btn btn-info btn-xs"><i class="fa fa-book"></i> Buscar</button>
-                <!-- <span class="info-box-number">1,410</span> -->
+                  <div class="form-group mb-3">
+                      <label>Buscar propietario</label>
+                      <select class="form-control form-control-sm" id="cboBuscarPropi" style="width: 100%;">
+                          <option value=""></option>
+                      </select>
+                  </div>
+                <%--<input type="text" class="form-control form-control-sm mb-2" id="txtNroci" name="Nro CI" placeholder="Nro cedula">
+                <button type="button" id="btnPanelBuscar" class="btn btn-info btn-xs"><i class="fa fa-book"></i> Buscar</button>--%>
               </div>
             </div>
           </div>
           <div class="col-md-3 col-sm-6 col-12">
             <div class="info-box">
                 <input id="txtIdpopietpa" value="0" type="hidden" />
+                <input id="txtNroci" value="0" type="hidden">
               <span class="info-box-icon bg-warning"><i class="fas fa-user-plus"></i></span>
 
               <div class="info-box-content">
@@ -100,5 +106,7 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="footer" runat="server">
+    <script src="plugins/selectzero2/select2.min.js"></script>
+<script src="plugins/selectzero2/es.min.js"></script>
     <script src="js/FrmPanelNotificacio.js" type="text/javascript"></script>
 </asp:Content>

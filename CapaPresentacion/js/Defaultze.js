@@ -63,7 +63,7 @@ function createChatBox(html, classes) {
 
 function handlechatResponse(userMessage) {
     user.message = userMessage
-    let html = `<img src="chatloaderr/user.png" alt="" id="userImage" width="8%">
+    let html = `<img src="/chatloaderr/user.png" alt="" id="userImage" width="8%">
     <div class="user-chat-area">
     ${user.message}
     </div>`
@@ -76,7 +76,7 @@ function handlechatResponse(userMessage) {
     setTimeout(() => {
         let html = `<img src="/chatloaderr/ai.png" alt="" id="aiImage" width="10%">
     <div class="ai-chat-area">
-    <img src="/chatloaderr/loading.webp" alt="" class="load" width="50px">
+    <img src="/chatloaderr/loading.webp" alt="" class="load" width="20px">
     </div>`
         let aiChatBox = createChatBox(html, "ai-chat-box")
         chatContainer.appendChild(aiChatBox)
