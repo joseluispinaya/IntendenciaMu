@@ -69,6 +69,7 @@
   <ItemGroup>
     <Content Include="assets\css\bootstrap.min.css" />
     <Content Include="assets\css\chatbot.css" />
+    <Content Include="assets\css\chatnuevoze.css" />
     <Content Include="assets\css\custom.css" />
     <Content Include="assets\css\fontawesome.css" />
     <Content Include="assets\css\fontawesome.min.css" />
@@ -80,6 +81,9 @@
     <Content Include="assets\img\about-hero.svg" />
     <Content Include="assets\img\ajax-loader.gif" />
     <Content Include="assets\img\apple-icon.png" />
+    <Content Include="assets\img\ban1.png" />
+    <Content Include="assets\img\ban2.jpg" />
+    <Content Include="assets\img\ban3.png" />
     <Content Include="assets\img\banner_img_01.jpg" />
     <Content Include="assets\img\banner_img_02.jpg" />
     <Content Include="assets\img\banner_img_03.jpg" />
@@ -87,8 +91,11 @@
     <Content Include="assets\img\feature_prod_01.jpg" />
     <Content Include="assets\img\feature_prod_02.jpg" />
     <Content Include="assets\img\feature_prod_03.jpg" />
+    <Content Include="assets\img\slaider3.jpeg" />
+    <Content Include="assets\img\slider1.jpeg" />
     <Content Include="assets\img\slider11.jpg" />
     <Content Include="assets\img\slider12.jpg" />
+    <Content Include="assets\img\slider2.jpeg" />
     <Content Include="assets\js\bootstrap.bundle.min.js" />
     <Content Include="assets\js\custom.js" />
     <Content Include="assets\js\jquery-1.11.0.min.js" />
@@ -100,6 +107,11 @@
     <Content Include="assets\webfonts\fa-regular-400.svg" />
     <Content Include="assets\webfonts\fa-solid-900.svg" />
     <Content Include="assets\webfonts\slick.svg" />
+    <Content Include="chatloaderr\ai.png" />
+    <Content Include="chatloaderr\img.svg" />
+    <Content Include="chatloaderr\roboti.svg" />
+    <Content Include="chatloaderr\submit.svg" />
+    <Content Include="chatloaderr\user.png" />
     <Content Include="Default.aspx" />
     <Content Include="dist\css\adminlte.css" />
     <Content Include="dist\css\adminlte.min.css" />
@@ -165,9 +177,11 @@
     <Content Include="Imagenes\logointen.png" />
     <Content Include="Imagenes\logoreport.png" />
     <Content Include="Imagenes\reportelo.png" />
+    <Content Include="Imagenes\selectlo.jpg" />
     <Content Include="Imagenes\Sinfotop.png" />
     <Content Include="Inicio.aspx" />
     <Content Include="js\chatbot.js" />
+    <Content Include="js\Defaultze.js" />
     <Content Include="js\FrmNotificacion.js" />
     <Content Include="js\FrmPanelNotificacio.js" />
     <Content Include="js\FrmPropietario.js" />
@@ -1838,6 +1852,9 @@
     <Content Include="plugins\select2\js\select2.full.min.js" />
     <Content Include="plugins\select2\js\select2.js" />
     <Content Include="plugins\select2\js\select2.min.js" />
+    <Content Include="plugins\selectzero2\es.min.js" />
+    <Content Include="plugins\selectzero2\select2.min.css" />
+    <Content Include="plugins\selectzero2\select2.min.js" />
     <Content Include="plugins\sparklines\sparkline.js" />
     <Content Include="plugins\sparklines\sparkline.mjs" />
     <Content Include="plugins\summernote\lang\summernote-ar-AR.js" />
@@ -2120,6 +2137,9 @@
     <Content Include="assets\webfonts\slick.eot" />
     <Content Include="assets\webfonts\slick.ttf" />
     <Content Include="assets\webfonts\slick.woff" />
+    <Content Include="chatloaderr\loading.webp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <Content Include="PaginaMas.Master" />
     <Content Include="plugins\bootstrap-colorpicker\css\bootstrap-colorpicker.css.map" />

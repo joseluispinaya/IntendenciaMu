@@ -18,6 +18,27 @@ namespace CapaPresentacion
 		}
 
         [WebMethod]
+        public static Respuesta<List<EPropietario>> ObtenerPropietariosFiltro(string busqueda)
+        {
+            try
+            {
+                var Lista = NPropietario.GetInstance().ObtenerPropietariosFiltro(busqueda);
+                return Lista;
+            }
+            catch (Exception ex)
+            {
+                // Maneja cualquier error inesperado
+                return new Respuesta<List<EPropietario>>()
+                {
+                    Estado = false,
+                    Mensaje = "Error al obtener los usuarios: " + ex.Message,
+                    Data = null
+                };
+            }
+
+        }
+
+        [WebMethod]
         public static Respuesta<List<EPropietario>> ObtenerPropietarios()
         {
             try

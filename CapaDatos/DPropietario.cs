@@ -221,5 +221,56 @@ namespace CapaDatos
             }
         }
 
+        public Respuesta<List<EPropietario>> ObtenerPropietariosFiltro(string Busqueda)
+        {
+            try
+            {
+                List<EPropietario> rptLista = new List<EPropietario>();
+
+                using (SqlConnection con = ConexionBD.GetInstance().ConexionDB())
+                {
+                    using (SqlCommand comando = new SqlCommand("sp_ObtenerPropietariosFiltro", con))
+                    {
+                        comando.CommandType = CommandType.StoredProcedure;
+                        comando.Parameters.AddWithValue("@Busqueda", Busqueda);
+                        con.Open();
+
+                        using (SqlDataReader dr = comando.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                rptLista.Add(new EPropietario()
+                                {
+                                    IdPropietario = Convert.ToInt32(dr["IdPropietario"]),
+                                    NroCi = dr["NroCi"].ToString(),
+                                    Nombres = dr["Nombres"].ToString(),
+                                    Apellidos = dr["Apellidos"].ToString(),
+                                    Celular = dr["Celular"].ToString(),
+                                    Activo = Convert.ToBoolean(dr["Activo"]),
+                                    FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"].ToString()).ToString("dd/MM/yyyy"),
+                                    VFechaRegistro = Convert.ToDateTime(dr["FechaRegistro"].ToString())
+                                });
+                            }
+                        }
+                    }
+                }
+                return new Respuesta<List<EPropietario>>()
+                {
+                    Estado = true,
+                    Data = rptLista,
+                    Mensaje = "propietarios obtenidos correctamente"
+                };
+            }
+            catch (Exception ex)
+            {
+                // Maneja cualquier error inesperado
+                return new Respuesta<List<EPropietario>>()
+                {
+                    Estado = false,
+                    Mensaje = "Ocurrió un error: " + ex.Message,
+                    Data = null
+                };
+            }
+        }
     }
 }

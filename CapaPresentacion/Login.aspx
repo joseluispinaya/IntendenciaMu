@@ -49,7 +49,7 @@
                 <span>Inicie con usuario y clave</span>
                 <input type="text" id="txtusername" placeholder="Usuario" value="zero01">
                 <input type="password" id="txtpassword" placeholder="Password" value="123456">
-                <!-- <a href="#">Forget Your Password?</a> -->
+                <a href="Default.aspx">Volver al inicio</a>
                 <button type="button" id="btnIniciarSesion">Iniciar</button>
             </form>
         </div>

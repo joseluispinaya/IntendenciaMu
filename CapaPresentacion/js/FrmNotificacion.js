@@ -11,6 +11,7 @@ function ObtenerFecha() {
 
 $(document).ready(function () {
     cargarNotificador();
+    cargarPropietarios();
     moment.locale('es');
     $('#txtfechapresent').datetimepicker({
         format: 'L',
@@ -112,10 +113,89 @@ function obtenerListaNotifiporId(IdPropi) {
     });
 }
 
+//para filtro de propietario
 
+function cargarPropietarios() {
+
+    $("#cboBuscarPropi").select2({
+        ajax: {
+            url: "FrmPropietario.aspx/ObtenerPropietariosFiltro",
+            dataType: 'json',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            delay: 250,
+            data: function (params) {
+                return JSON.stringify({ busqueda: params.term });
+            },
+            processResults: function (data) {
+                //console.log("Datos recibidos:", data.d.objeto);
+                return {
+                    results: data.d.Data.map((item) => ({
+                        id: item.IdPropietario,
+                        text: item.Nombres,
+                        Apellidos: item.Apellidos,
+                        NroCi: item.NroCi,
+                        propietario: item
+                    }))
+                };
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                console.log(xhr.status + " \n" + xhr.responseText, "\n" + thrownError);
+            }
+        },
+        language: "es",
+        placeholder: 'Buscar propietario',
+        minimumInputLength: 1,
+        templateResult: formatoResultados
+    });
+}
+
+function formatoResultados(data) {
+
+    var imagenes = "Imagenes/selectlo.jpg";
+    // Esto es por defecto, ya que muestra el "buscando..."
+    if (data.loading)
+        return data.text;
+
+    var contenedor = $(
+        `<table width="100%">
+            <tr>
+                <td style="width:60px">
+                    <img style="height:60px;width:60px;margin-right:10px" src="${imagenes}"/>
+                </td>
+                <td>
+                    <p style="font-weight: bolder;margin:2px">${data.text} ${data.Apellidos}</p>
+                    <p style="margin:2px">CI: ${data.NroCi}</p>
+                </td>
+            </tr>
+        </table>`
+    );
+
+    return contenedor;
+}
+
+$(document).on("select2:open", function () {
+    document.querySelector(".select2-search__field").focus();
+
+});
+
+$("#cboBuscarPropi").on("select2:select", function (e) {
+
+    var data = e.params.data.propietario;
+
+    $("#nompropi").text(data.Nombres);
+    $("#apellpropi").text(data.Apellidos);
+    $("#txtIdpopiet").val(data.IdPropietario);
+
+    obtenerListaNotifiporId(data.IdPropietario);
+
+    $("#cboBuscarPropi").val("").trigger("change")
+    //console.log(data);
+});
+
+//sin usar
 function buscarPropietario() {
 
-    //data: JSON.stringify({ Nroci: $("#nrocipropi").val().trim() }),
     $.ajax({
         type: "POST",
         url: "FrmNotificacion.aspx/BuscarPropie",
@@ -181,14 +261,14 @@ function ImprimirNot(idNotificacion) {
 
 }
 
-$('#btnBuscar').on('click', function () {
+//$('#btnBuscar').on('click', function () {
 
-    if ($("#nrocipropi").val().trim() === "") {
-        swal("Mensaje", "Ingrese el Nro Ci para Buscar", "warning");
-        return;
-    }
-    buscarPropietario();
-});
+//    if ($("#nrocipropi").val().trim() === "") {
+//        swal("Mensaje", "Ingrese el Nro Ci para Buscar", "warning");
+//        return;
+//    }
+//    buscarPropietario();
+//});
 
 function registerDataNotificacion() {
 
@@ -218,6 +298,9 @@ function registerDataNotificacion() {
 
                 if (iddeProp !== 0) {
                     obtenerListaNotifiporId(iddeProp);
+                    //borrar id propietario
+                    $("#txtIdpopiet").val("0");
+
                 } else {
                     $("#UilistNot").html(""); // Limpia el contenido si el ID es 0
                 }
@@ -246,6 +329,11 @@ $('#btnNuevoRegNot').on('click', function () {
 
     if ($("#txtIdnotiifi").val().trim() === "") {
         swal("Mensaje", "Debe Iniciar sesion no se encontro el notificador", "warning")
+        return;
+    }
+
+    if ($("#txtDescripcion").val().trim() === "") {
+        swal("Mensaje", "Debe ingresar una descripcion para la notificacion", "warning")
         return;
     }
 

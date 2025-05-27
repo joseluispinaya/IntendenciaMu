@@ -74,7 +74,7 @@ async function cerrarSesion() {
 
         if (response.d.Estado) {
             sessionStorage.clear(); // Limpia el almacenamiento de sesión
-            window.location.replace('Login.aspx'); // Redirige al login
+            window.location.replace('Default.aspx'); // Redirige al login
         }
     } catch (error) {
         console.error('Error al cerrar la sesión:', error);

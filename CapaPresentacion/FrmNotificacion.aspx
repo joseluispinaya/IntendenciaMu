@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PaginaMas.Master" AutoEventWireup="true" CodeBehind="FrmNotificacion.aspx.cs" Inherits="CapaPresentacion.FrmNotificacion" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link rel="stylesheet" href="plugins/selectzero2/select2.min.css">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" runat="server">
     <div class="row">
@@ -22,21 +23,27 @@
           <li class="list-group-item" id="totalnotif">
             <b>Notificaciones</b> <a class="float-right">0</a>
           </li>
-          <%--<li class="list-group-item">
-            <b>Following</b> <a class="float-right">543</a>
-          </li>
-          <li class="list-group-item">
-            <b>Friends</b> <a class="float-right">13,287</a>
-          </li>--%>
+
         </ul>
-          <div class="form-horizontal">
+          <%--<div class="form-horizontal">
               <div class="input-group input-group-sm mb-3">
                   <input type="text" id="nrocipropi" class="form-control form-control-sm" placeholder="Ingrese CI">
                   <div class="input-group-append">
                       <button type="button" id="btnBuscar" class="btn btn-danger">Buscar</button>
                   </div>
               </div>
-          </div>
+          </div>--%>
+
+          <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group mb-3">
+                        <label>Buscar propietario</label>
+                        <select class="form-control form-control-sm" id="cboBuscarPropi" style="width: 100%;">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
         <a href="FrmPropietario.aspx" class="btn btn-primary btn-block"><b>Registrar Propietario</b></a>
       </div>
@@ -218,5 +225,7 @@
 </div>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="footer" runat="server">
+    <script src="plugins/selectzero2/select2.min.js"></script>
+    <script src="plugins/selectzero2/es.min.js"></script>
     <script src="js/FrmNotificacion.js" type="text/javascript"></script>
 </asp:Content>
