@@ -1,18 +1,371 @@
-﻿let prompt = document.querySelector("#prompt")
+﻿
+
+let prompt = document.querySelector("#prompt")
 let submitbtn = document.querySelector("#submit")
 let chatContainer = document.querySelector(".chat-container")
-//let imagebtn = document.querySelector("#image")
-//let image = document.querySelector("#image img")
-//let imageinput = document.querySelector("#image input")
 
-const apikey = "AIzaSyAmMfWZrys-Rxg2k_Ele2xSXVpo0-6NGBU";
-const Api_Url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apikey}`;
-//const Api_Url="https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=Your-Api-Key"
+let esquemaSimplificado = [];
+const tokenOPENAI = '';
 
 let user = {
     message: null,
 }
 const chatHistoryz = [];
+
+$(document).ready(function () {
+    obtenerEsquema();
+});
+
+function createChatBox(html, classes) {
+    let div = document.createElement("div")
+    div.innerHTML = html
+    div.classList.add(classes)
+    return div
+}
+
+
+function obtenerEsquema() {
+    $.ajax({
+        type: "POST",
+        url: "Default.aspx/ObtenerEsquemaBD",
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        success: function (response) {
+            if (response.d.Estado) {
+                const esquema = response.d.Data;
+                esquemaSimplificado = esquema.map(tabla => ({
+                    NombreTabla: tabla.NombreTabla,
+                    Columnas: tabla.Columnas.map(col => ({
+                        NombreColumna: col.NombreColumna,
+                        TipoDato: col.TipoDato
+                    }))
+                }));
+            } else {
+                swal("Mensaje", response.d.Mensaje, "warning");
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.log(xhr.status + " \n" + xhr.responseText, "\n" + thrownError);
+        }
+    });
+}
+
+async function responderAnteFueraContexto(preguntaUsuario) {
+    const mensajeSistema = `
+        Eres un asistente de IA que solo responde saludos o despedidas.
+
+        - Si el mensaje del usuario es un saludo (como "Hola", "Buenos días") o una despedida (como "Gracias, hasta luego"), responde de forma amable y profesional.
+        - Si el mensaje NO es un saludo o despedida, responde exactamente con: 
+          "Lo siento, tu pregunta no está en mi modelo para ser atendida. Solo puedo darte información sobre la Intendencia Municipal de Riberalta o relacionada con ella."
+
+        Ejemplos:
+        - Usuario: "Hola"
+          Respuesta: "¡Hola! ¿En qué puedo ayudarte hoy?"
+        - Usuario: "Gracias, hasta luego"
+          Respuesta: "¡Gracias a ti! Que tengas un excelente día."
+        - Usuario: "¿Cuál es la capital de Francia?"
+          Respuesta: "Lo siento, tu pregunta no está en mi modelo para ser atendida. Solo puedo darte información sobre la Intendencia Municipal de Riberalta o relacionada con ella."
+
+        Responde ahora según estas instrucciones:
+        `;
+
+    try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${tokenOPENAI}`
+            },
+            body: JSON.stringify({
+                model: "gpt-4o",
+                messages: [
+                    { role: "system", content: mensajeSistema },
+                    { role: "user", content: preguntaUsuario }
+                ],
+                temperature: 0.2,
+                max_tokens: 100
+            })
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error.message || "Error al llamar al modelo entrenado");
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content.trim();
+
+    } catch (error) {
+        console.error("Error al responder:", error.message);
+        return "Tuvimos un problema al generar una respuesta. Por favor, intentá nuevamente más tarde.";
+    }
+}
+
+
+async function responderAnteAdvertencias(preguntaUsuario, mensajeAdvertencia) {
+    const mensajeSistema = `
+          Eres un asistente de IA que responde preguntas de forma clara, amable y profesional.
+  
+          Tienes dos elementos de entrada:
+          1. La pregunta original del usuario.
+          2. Un mensaje de advertencia que indica el tipo de situación detectada.
+  
+          Tu tarea es interpretar esa advertencia y redactar una respuesta útil, natural y bien formulada.
+  
+          Comportamiento según el tipo de advertencia:
+          - Si la advertencia es "NO_VALIDO": indica de forma educada que solo puedes ayudar con consultas y no con acciones que modifiquen información.
+          - Si la advertencia es "NO_EXISTE": responde de forma cortés que solo estás entrenado para asistir en consultas relacionadas con la intendencia municipal de riberalta.
+  
+          Ejemplos:
+  
+          Pregunta: "elimina los registros de usuarios"
+          Advertencia: "NO_VALIDO"
+          Respuesta esperada: "Actualmente solo estoy entrenado para ayudarte y brindarte asistencia en temas específicos. Por favor, intenta con otra consulta."
+  
+          Pregunta: "¿Cuántos días tiene un mes?"
+          Advertencia: "NO_EXISTE"
+          Respuesta esperada: "Solo puedo ayudarte en consultas relacionadas sobre la intendencia municipal de riberalta."
+  
+          Ahora responde educadamente a la siguiente pregunta del usuario, usando la información proporcionada.
+          `;
+
+    try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${tokenOPENAI}`
+            },
+            body: JSON.stringify({
+                model: "gpt-4o",
+                messages: [
+                    { role: "system", content: mensajeSistema },
+                    { role: "user", content: `Pregunta: ${preguntaUsuario}\nAdvertencia: ${mensajeAdvertencia}` }
+                ],
+                temperature: 0.5,
+                max_tokens: 300
+            })
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error.message || "Error al llamar al modelo entrenado");
+        }
+
+        const data = await response.json();
+        return data.choices[0].message.content.trim();
+
+    } catch (error) {
+        console.error("Error al responder:", error.message);
+        return "Tuvimos un problema al generar una respuesta. Por favor, intentá nuevamente más tarde.";
+    }
+}
+
+async function respuestaHumanizada(preguntaUsuario, datosSQL) {
+    const mensajeSistema = `
+    Eres un asistente de IA que responde preguntas de forma clara, amigable y profesional.
+
+    Instrucciones:
+    - Tienes la pregunta original de un usuario y los datos obtenidos de la base de datos en formato JSON.
+    - Tu tarea es interpretar los datos y generar una respuesta útil, bien redactada y natural.
+    - Si los datos están vacíos o no hay resultados, indícalo de forma educada.
+
+    Ejemplo:
+    Pregunta: "¿Cuántos usuarios hay registrados?"
+    Datos: [{ total: 152 }]
+    Respuesta esperada: "Actualmente hay 152 usuarios registrados en el sistema."
+
+    Ahora responde amablemente la siguiente pregunta del usuario usando los datos proporcionados.
+    `;
+
+    try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${tokenOPENAI}`
+            },
+            body: JSON.stringify({
+                model: "gpt-4o",
+                messages: [
+                    { role: "system", content: mensajeSistema },
+                    { role: "user", content: `Pregunta: ${preguntaUsuario}\nDatos: ${JSON.stringify(datosSQL, null, 2)}` }
+                ],
+                temperature: 0.5,
+                max_tokens: 300
+            })
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error.message || "Error al llamar al modelo entrenado");
+        }
+        const data = await response.json();
+        return data.choices[0].message.content.trim();
+        //const data = await response.json();
+        //const respuestaHuma = data.choices[0].message.content.trim();
+
+        //agregarMensaje(respuestaHuma, "bot-message");
+
+    } catch (error) {
+        console.error("Error al responder:", error.message);
+        return "Tuvimos un problema al generar una respuesta. Por favor, intentá nuevamente más tarde.";
+    }
+}
+
+async function ejecutarConsultaSQL(sqlGenerado, userInput) {
+    try {
+        const response = await $.ajax({
+            type: "POST",
+            url: "Default.aspx/ConsultaSql",
+            data: JSON.stringify({ ConsultaSql: sqlGenerado }),
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json"
+        });
+
+        if (response.d.Estado) {
+            const datos = response.d.Data;
+            console.log(datos);
+            const respuesta = await respuestaHumanizada(userInput, datos);
+            return respuesta;
+        } else {
+            return "Tuvimos un problema al generar una respuesta. Por favor, intentá nuevamente más tarde.";
+        }
+    } catch (error) {
+        console.error('Error al obtener los datos del usuario:', error);
+        return "Tuvimos un problema al generar una respuesta. Por favor, intentá nuevamente más tarde.";
+    }
+}
+
+async function generarSentenciaSql() {
+    const userInput = user.message;
+
+    const promptSistema = `
+        Eres un asistente experto en generar consultas SQL específicamente para Microsoft SQL Server.
+
+        Tu tarea es transformar instrucciones en lenguaje natural en consultas T-SQL válidas, claras y eficientes, usando el siguiente esquema de base de datos:
+
+        ${JSON.stringify(esquemaSimplificado, null, 2)}
+
+        Ten en cuenta que los usuarios pueden usar sinónimos o formas informales para referirse a tablas o columnas. Usa el siguiente diccionario de sinónimos para interpretar correctamente las instrucciones y mapearlas al esquema real:
+
+        DICCIONARIO DE SINÓNIMOS:
+        - USUARIO: usuarios, cuentas, personas del sistema, quienes usan el sistema
+        - ROL: roles, permisos, tipo de acceso, perfil
+        - PROPIETARIO: propietarios, dueños, titulares, personas que registran negocios
+        - NEGOCIO: negocios, empresas, comercios, locales, tiendas
+        - NOTIFICACION: notificaciones, alertas, reportes, clausuras
+        - ACTIVIDADES: actividades, eventos, acciones, publicaciones
+
+        CAMPOS COMUNES:
+        - Nombres: nombre, nombres, nombre completo
+        - Apellidos: apellido, apellidos
+        - Correo: email, correo electrónico
+        - Users: nombre de usuario, usuario
+        - Clave: contraseña, clave
+        - Celular: teléfono, número, celular
+        - Foto: imagen, fotografía
+        - Ubicacion: dirección, ubicación, lugar
+        - FechaRegistro: fecha de registro, fecha, cuándo fue creado
+        - IdRol: rol, perfil, tipo de usuario
+        - IdPropietario: dueño, propietario
+        - IdUsuario: usuario, responsable
+        - NombreNegocio: nombre del negocio, nombre comercial
+        - Actividad: actividad, giro, rubro
+        - Titulo: título, nombre de la actividad
+        - Descripcion: descripción, detalle, información
+        - FechaPresencia: fecha de presencia, fecha de verificación
+
+        IMPORTANTE: interpreta los requerimientos usando este diccionario como guía para entender sinónimos.
+
+        REGLAS DE RESPUESTA:
+        - Usa correctamente la sintaxis de T-SQL para SQL Server.
+        - Utiliza JOIN si se necesitan datos de varias tablas.
+        - Aplica condiciones WHERE, filtros TOP, funciones como GETDATE(), DATEDIFF(), etc., si corresponde.
+        - IMPORTANTE: No utilices bloques de código Markdown como \`\`\`sql o \`\`\`. Devuelve solo la sentencia SQL en texto plano.
+        - No incluyas explicaciones, encabezados, ni texto adicional.
+        - Si la instrucción no puede ser respondida con una sentencia SELECT, responde solo con: NO_VALIDO.
+        - Si la instrucción no está relacionada con el esquema, responde solo con: NO_EXISTE.
+
+        Ejemplos:
+
+        "original_query": "Mostrar los últimos 10 usuarios registrados."
+        "sql_query": "SELECT TOP 10 * FROM USUARIO ORDER BY IdUsuario DESC;"
+
+        "original_query": "Listar todos los negocios activos."
+        "sql_query": "SELECT * FROM NEGOCIO WHERE Activo = 1;"
+
+        "original_query": "Mostrar las notificaciones del propietario Juan Pérez."
+        "sql_query": "SELECT N.* FROM NOTIFICACION N INNER JOIN PROPIETARIO P ON N.IdPropietario = P.IdPropietario WHERE P.Nombres = 'Juan' AND P.Apellidos = 'Pérez';"
+
+        "original_query": "Ver el nombre y ubicación de los negocios registrados por el propietario con CI 12345678."
+        "sql_query": "SELECT N.NombreNegocio, N.Ubicacion FROM NEGOCIO N INNER JOIN PROPIETARIO P ON N.IdPropietario = P.IdPropietario WHERE P.NroCi = '12345678';"
+
+        "original_query": "Cuántas actividades se registraron este mes."
+        "sql_query": "SELECT COUNT(*) FROM ACTIVIDADES WHERE MONTH(FechaRegistro) = MONTH(GETDATE()) AND YEAR(FechaRegistro) = YEAR(GETDATE());"
+
+        "original_query": "Mostrar los nombres de usuario y su rol."
+        "sql_query": "SELECT U.Users, R.Descripcion FROM USUARIO U INNER JOIN ROL R ON U.IdRol = R.IdRol;"
+
+        Ahora genera la consulta para el siguiente requerimiento:
+        `;
+
+    try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${tokenOPENAI}`
+            },
+            body: JSON.stringify({
+                model: "gpt-4o",
+                messages: [
+                    { role: "system", content: promptSistema },
+                    { role: "user", content: userInput }
+                ],
+                temperature: 0.2,
+                max_tokens: 300
+            })
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error.message || "Error al llamar al modelo entrenado");
+        }
+        const data = await response.json();
+        let sqlGenerado = data.choices[0].message.content.trim();
+        console.log("SQL generado:", sqlGenerado);
+        sqlGenerado = sqlGenerado.replace(/```sql|```/g, "").trim();
+        console.log("SQL Limpio:", sqlGenerado);
+
+        //if (sqlGenerado === "NO_VALIDO") {
+        //    const respu = await responderAnteAdvertencias(userInput, "NO_VALIDO");
+        //    return respu;
+        //}
+
+        //if (sqlGenerado === "NO_EXISTE") {
+        //    const respu = await responderAnteAdvertencias(userInput, "NO_EXISTE");
+        //    return respu;
+        //}
+
+        if (sqlGenerado === "NO_VALIDO" || sqlGenerado === "NO_EXISTE") {
+            //const tipoDetectado = detectarTipoMensaje(userInput);
+            const respuestaContextual = await responderAnteFueraContexto(userInput);
+
+            return respuestaContextual;
+        }
+
+        const respuestase = await ejecutarConsultaSQL(sqlGenerado, userInput);
+        return respuestase;
+
+        //return data.choices[0].message.content.trim();
+
+    } catch (error) {
+        console.error("Error al responder:", error.message);
+        return "Tuvimos un problema al generar la consulta a la base de datos, intentá nuevamente más tarde.";
+    }
+}
+
 
 async function generateResponse(aiChatBox) {
 
@@ -23,43 +376,22 @@ async function generateResponse(aiChatBox) {
         parts: [{ text: user.message }],
     });
 
-    let RequestOption = {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: chatHistoryz }),
-    }
     try {
-        let response = await fetch(Api_Url, RequestOption)
-        let data = await response.json()
-        let apiResponse = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim()
-        text.innerHTML = apiResponse
+        const respuestase = await generarSentenciaSql();
+        text.innerHTML = respuestase
 
         chatHistoryz.push({
             role: "model",
-            parts: [{ text: apiResponse }],
+            parts: [{ text: respuestase }],
         });
-    }
-    catch (error) {
-        console.log(error);
 
-    }
-    finally {
+    } catch (error) {
+        console.error("Error al generar SQL:", error.message);
+        text.innerHTML = "Hubo un problema al procesar tu consulta. Por favor, intentá nuevamente más tarde.";
+    } finally {
         chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: "smooth" })
-        //image.src = `img.svg`
-        //image.classList.remove("choose")
-        //user.file = {}
     }
 }
-
-
-
-function createChatBox(html, classes) {
-    let div = document.createElement("div")
-    div.innerHTML = html
-    div.classList.add(classes)
-    return div
-}
-
 
 function handlechatResponse(userMessage) {
     user.message = userMessage
@@ -75,9 +407,9 @@ function handlechatResponse(userMessage) {
 
     setTimeout(() => {
         let html = `<img src="/chatloaderr/ai.png" alt="" id="aiImage" width="10%">
-    <div class="ai-chat-area">
-    <img src="/chatloaderr/loading.webp" alt="" class="load" width="20px">
-    </div>`
+            <div class="ai-chat-area">
+            <img src="/chatloaderr/loading.webp" alt="" class="load" width="20px">
+            </div>`
         let aiChatBox = createChatBox(html, "ai-chat-box")
         chatContainer.appendChild(aiChatBox)
         generateResponse(aiChatBox)
@@ -85,7 +417,6 @@ function handlechatResponse(userMessage) {
     }, 600)
 
 }
-
 
 prompt.addEventListener("keydown", (e) => {
     if (e.key == "Enter") {
@@ -97,27 +428,7 @@ prompt.addEventListener("keydown", (e) => {
 submitbtn.addEventListener("click", () => {
     handlechatResponse(prompt.value)
 })
-/* imageinput.addEventListener("change", () => {
-    const file = imageinput.files[0]
-    if (!file) return
-    let reader = new FileReader()
-    reader.onload = (e) => {
-        let base64string = e.target.result.split(",")[1]
-        user.file = {
-            mime_type: file.type,
-            data: base64string
-        }
-        image.src = `data:${user.file.mime_type};base64,${user.file.data}`
-        image.classList.add("choose")
-    }
 
-    reader.readAsDataURL(file)
-}) */
-
-
-// imagebtn.addEventListener("click", () => {
-//     imagebtn.querySelector("input").click()
-// })
 
 document.getElementById('chatButton').addEventListener('click', function () {
     document.querySelector('.contenedor').style.display = 'flex';

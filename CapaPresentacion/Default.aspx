@@ -347,7 +347,7 @@
             <div class="ai-chat-box">
                 <img src="chatloaderr/ai.png" alt="" id="aiImage" style="width:10%;">
                 <div class="ai-chat-area">
-                    Hello ! How Can I Help you Today?
+                    Hola como puedo ayudarte hoy?
                 </div>
     
             </div>
