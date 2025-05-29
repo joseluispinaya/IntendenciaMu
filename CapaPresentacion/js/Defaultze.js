@@ -11,7 +11,7 @@ let user = {
     message: null
 }
 const chatHistoryz = [];
-
+//esquema
 $(document).ready(function () {
     obtenerEsquema();
 });
