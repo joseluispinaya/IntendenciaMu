@@ -5,10 +5,10 @@ let submitbtn = document.querySelector("#submit")
 let chatContainer = document.querySelector(".chat-container")
 
 let esquemaSimplificado = [];
-const tokenOPENAI = '';
+const tokenOPENAI = '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';
 
 let user = {
-    message: null,
+    message: null
 }
 const chatHistoryz = [];
 
@@ -55,8 +55,7 @@ async function responderAnteFueraContexto(preguntaUsuario) {
         Eres un asistente de IA que solo responde saludos o despedidas.
 
         - Si el mensaje del usuario es un saludo (como "Hola", "Buenos días") o una despedida (como "Gracias, hasta luego"), responde de forma amable y profesional.
-        - Si el mensaje NO es un saludo o despedida, responde exactamente con: 
-          "Lo siento, tu pregunta no está en mi modelo para ser atendida. Solo puedo darte información sobre la Intendencia Municipal de Riberalta o relacionada con ella."
+        - Si el mensaje NO es un saludo o despedida, responde exactamente con: NO_SALUDA (sin comillas).
 
         Ejemplos:
         - Usuario: "Hola"
@@ -64,7 +63,7 @@ async function responderAnteFueraContexto(preguntaUsuario) {
         - Usuario: "Gracias, hasta luego"
           Respuesta: "¡Gracias a ti! Que tengas un excelente día."
         - Usuario: "¿Cuál es la capital de Francia?"
-          Respuesta: "Lo siento, tu pregunta no está en mi modelo para ser atendida. Solo puedo darte información sobre la Intendencia Municipal de Riberalta o relacionada con ella."
+          Respuesta: "NO_SALUDA"
 
         Responde ahora según estas instrucciones:
         `;
@@ -101,6 +100,63 @@ async function responderAnteFueraContexto(preguntaUsuario) {
     }
 }
 
+async function generarRespuestaInten(preguntaUsuario) {
+
+    const promptSistema = `
+        Eres un asistente de IA que responde únicamente con base en la siguiente información oficial sobre la Intendencia Municipal de Riberalta.
+        Si el usuario hace una pregunta que no se puede responder directamente con esta información, debes responder exactamente con: SIN_INFORMACION (sin comillas).
+
+        INFORMACIÓN OFICIAL:
+
+        FUNDACIÓN:
+        La Intendencia del Gobierno Autónomo Municipal de Riberalta fue fundada en el marco de la constitución política del estado plurinacional de Bolivia mediante la Ley N° 482 de Gobiernos Autónomos Municipales, promulgada el 31 de mayo de 2014, y su modificación mediante la Ley N°733 (2015). Esta ley establece el marco normativo para la organización y administración de los municipios en Bolivia. En ese contexto, el Gobierno Autónomo Municipal de Riberalta fortaleció sus estructuras administrativas para la regulación de servicios públicos, comercio y seguridad ciudadana.
+
+        UBICACIÓN Y DIRECCIÓN:
+        La Intendencia está ubicada en la ciudad de Riberalta, provincia Vaca Díez, departamento del Beni. Su dirección actual es Barrio/Central - Avenida Máximo Henicke N°425.
+
+        ACTUAL ENCARGADO:
+        La Licenciada Gloria Iris Juarez es la responsable actual de la administración de servicios y seguridad ciudadana del G.A.M.R.
+
+        FUNCIONES:
+        1. Atención de denuncias y control de productos (verificación de calidad y peso, sanciones a comerciantes infractores).
+        2. Regulación de mercados y espacios públicos (ordenamiento y supervisión para garantizar el funcionamiento adecuado).
+        3. Control de establecimientos de diversión y expendio de bebidas alcohólicas (Inspección de bares, discotecas, karaokes y otros espacios de entretenimiento para asegurar que cumplan con las normas establecidas).
+        4. Supervisión de la higiene y sanidad (Control de la calidad de los alimentos y condiciones higiénicas en mercados y comercios).
+        `;
+
+    try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${tokenOPENAI}`
+            },
+            body: JSON.stringify({
+                model: "gpt-4o",
+                messages: [
+                    { role: "system", content: promptSistema },
+                    { role: "user", content: preguntaUsuario }
+                ],
+                temperature: 0.5,
+                max_tokens: 300
+            })
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error.message || "Error al llamar al modelo entrenado");
+        }
+
+        const data = await response.json();
+        let respuesta = data.choices[0].message.content.trim();
+        console.log("Respuesta:", respuesta);
+        return respuesta;
+
+    } catch (error) {
+        console.error("Error al responder:", error.message);
+        return "Tuvimos un problema, intentá nuevamente más tarde.";
+    }
+}
 
 async function responderAnteAdvertencias(preguntaUsuario, mensajeAdvertencia) {
     const mensajeSistema = `
@@ -338,27 +394,43 @@ async function generarSentenciaSql() {
         sqlGenerado = sqlGenerado.replace(/```sql|```/g, "").trim();
         console.log("SQL Limpio:", sqlGenerado);
 
-        //if (sqlGenerado === "NO_VALIDO") {
-        //    const respu = await responderAnteAdvertencias(userInput, "NO_VALIDO");
-        //    return respu;
+
+        //if (sqlGenerado === "NO_VALIDO" || sqlGenerado === "NO_EXISTE") {
+        //    const respuestaContextual = await responderAnteFueraContexto(userInput);
+
+        //    if (respuestaContextual === "NO_SALUDA") {
+        //        const respuestaInfo = generarRespuestaInten(userInput);
+
+        //        if (respuestaInfo === "SIN_INFORMACION") {
+        //            return "Tu pregunta esta fuera de nuestro modelo intenta con otra pregunta o reformula de otra forma.";
+        //        }
+
+        //        return respuestaInfo;
+        //    }
+
+        //    return respuestaContextual;
         //}
 
-        //if (sqlGenerado === "NO_EXISTE") {
-        //    const respu = await responderAnteAdvertencias(userInput, "NO_EXISTE");
-        //    return respu;
-        //}
+        //const respuestase = await ejecutarConsultaSQL(sqlGenerado, userInput);
+        //return respuestase;
 
-        if (sqlGenerado === "NO_VALIDO" || sqlGenerado === "NO_EXISTE") {
-            //const tipoDetectado = detectarTipoMensaje(userInput);
-            const respuestaContextual = await responderAnteFueraContexto(userInput);
+        if (sqlGenerado !== "NO_VALIDO" && sqlGenerado !== "NO_EXISTE") {
+            return await ejecutarConsultaSQL(sqlGenerado, userInput);
+        }
 
+        const respuestaContextual = await responderAnteFueraContexto(userInput);
+
+        if (respuestaContextual !== "NO_SALUDA") {
             return respuestaContextual;
         }
 
-        const respuestase = await ejecutarConsultaSQL(sqlGenerado, userInput);
-        return respuestase;
+        const respuestaInfo = await generarRespuestaInten(userInput);
 
-        //return data.choices[0].message.content.trim();
+        if (respuestaInfo === "SIN_INFORMACION") {
+            return "Tu pregunta está fuera de nuestro modelo. Intentá con otra o reformulá tu consulta.";
+        }
+
+        return respuestaInfo;
 
     } catch (error) {
         console.error("Error al responder:", error.message);
