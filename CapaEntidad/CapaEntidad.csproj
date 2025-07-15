@@ -42,11 +42,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColumnaEsquema.cs" />
+    <Compile Include="ENegocio.cs" />
     <Compile Include="ENotificacion.cs" />
     <Compile Include="EPropietario.cs" />
+    <Compile Include="EReporteNotFe.cs" />
+    <Compile Include="EResponseApp.cs" />
     <Compile Include="ERol.cs" />
     <Compile Include="EUsuario.cs" />
+    <Compile Include="LoginDTO.cs" />
+    <Compile Include="NotificacionRequest.cs" />
+    <Compile Include="PromptData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResponseNotifia.cs" />
+    <Compile Include="ResponsePropi.cs" />
     <Compile Include="Respuesta.cs" />
     <Compile Include="TablasEsquema.cs" />
   </ItemGroup>

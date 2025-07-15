@@ -6,6 +6,7 @@ $(document).ready(function () {
     //console.log(usuarioL);
 
     if (tokenSesion && usuarioL) {
+        console.log("hay sesion");
         // Parsear el usuario almacenado
         var usuParaenviar = JSON.parse(usuarioL);
         var idUsu = usuParaenviar.IdUsuario; // Obtener IdUsuario
@@ -15,15 +16,21 @@ $(document).ready(function () {
 
     } else {
         // Si no hay sesión, redirigir al login
+        console.log("no hay sesion");
         window.location.href = 'Login.aspx';
     }
 
 });
 
-$('#salirsis').on('click', async function (e) {
-    e.preventDefault(); // Evita que el <a> navegue a otra página
-    await cerrarSesion(); // Llama a la función asíncrona y espera su finalización
+$('#salirsis').on('click', function (e) {
+    e.preventDefault();
+    CerrarSesionz();
 });
+
+//$('#salirsis').on('click', async function (e) {
+//    e.preventDefault();
+//    await cerrarSesion();
+//});
 
 
 async function obtenerDetalleUsuarioR(idUsu) {
@@ -39,7 +46,8 @@ async function obtenerDetalleUsuarioR(idUsu) {
         if (response.d.Estado) {
             const tokenSession = sessionStorage.getItem('tokenSesion');
             if (tokenSession !== response.d.Valor) {
-                await cerrarSesion(); // Llama a la función para cerrar sesión
+                CerrarSesionz();
+                //await cerrarSesion();
             } else {
                 // Actualiza la información del usuario en la interfaz nuevo
                 const usuarioL = sessionStorage.getItem('usuarioLo');
@@ -48,6 +56,22 @@ async function obtenerDetalleUsuarioR(idUsu) {
                     var usuario = JSON.parse(usuarioL);
                     $("#nomUserg").text(usuario.Apellidos);
                     $("#imgUsumast").attr("src", usuario.ImageFull);
+
+                    const rolUser = usuario.IdRol;
+
+                    // Oculta todo al inicio
+                    $(".menu-admin, .menu-prop, .menu-noti, .menu-panelz, .menu-report-noti, .menu-report-neg").hide();
+
+                    // Mostrar solo lo que corresponde al rol
+                    if (rolUser === 1) {
+                        $(".menu-admin").show(); // Usuarios
+                    } else if (rolUser === 2) {
+                        $(".menu-prop, .menu-report-noti").show(); // Propietarios y reporte notificación
+                    } else if (rolUser === 3) {
+                        $(".menu-noti, .menu-panelz, .menu-report-noti, .menu-report-neg").show();
+                    }
+
+
                 } else {
                     console.error('No se encontró información del usuario en sessionStorage.');
                     window.location.href = 'Login.aspx'; // Redirigir si no hay usuario válido
@@ -63,6 +87,12 @@ async function obtenerDetalleUsuarioR(idUsu) {
     }
 }
 
+function CerrarSesionz() {
+    console.log("sesion cerrada");
+    sessionStorage.clear();
+    window.location.replace('Login.aspx');
+}
+
 async function cerrarSesion() {
     try {
         const response = await $.ajax({
@@ -73,6 +103,7 @@ async function cerrarSesion() {
         });
 
         if (response.d.Estado) {
+            console.log("sesion cerrada");
             sessionStorage.clear(); // Limpia el almacenamiento de sesión
             window.location.replace('Default.aspx'); // Redirige al login
         }

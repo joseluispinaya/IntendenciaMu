@@ -59,8 +59,8 @@ namespace CapaDatos
                             ColumnaEsquema columnaEsquema = new ColumnaEsquema
                             {
                                 NombreColumna = columnaRow["COLUMN_NAME"].ToString(),
-                                TipoDato = columnaRow["DATA_TYPE"].ToString(),
-                                EsNullable = columnaRow["IS_NULLABLE"].ToString() == "YES"
+                                TipoDato = columnaRow["DATA_TYPE"].ToString()
+                                //EsNullable = columnaRow["IS_NULLABLE"].ToString() == "YES"
                             };
 
                             tablaEsquema.Columnas.Add(columnaEsquema);
@@ -117,12 +117,12 @@ namespace CapaDatos
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new Respuesta<DataTable>()
                 {
                     Estado = false,
-                    Mensaje = "Error al ejecutar la consulta: " + ex.Message,
+                    Mensaje = "Error al ejecutar la consulta",
                     Valor = null,
                     Data = null
                 };

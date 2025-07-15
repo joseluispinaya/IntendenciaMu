@@ -59,6 +59,16 @@ namespace CapaPresentacion
                     };
                 }
 
+                if (!obj.Data.Activo)
+                {
+                    return new Respuesta<EUsuario>
+                    {
+                        Estado = false,
+                        Mensaje = "El usuario está inhabilitado.",
+                        Data = null
+                    };
+                }
+
                 // Obtener el token almacenado en la base de datos
                 var tokenDbResponse = NUsuario.GetInstance().ObtenerToken(obj.Data.IdUsuario);
 

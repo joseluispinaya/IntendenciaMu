@@ -52,5 +52,10 @@ namespace CapaNegocio
         {
             return DUsuario.GetInstance().ListaRoles();
         }
+
+        public Respuesta<EResponseApp> LoginUsuarioApp(string Correo, string Clave)
+        {
+            return DUsuario.GetInstance().LoginUsuarioApp(Correo, Clave);
+        }
     }
 }

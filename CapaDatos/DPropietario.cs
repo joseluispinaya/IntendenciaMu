@@ -272,5 +272,55 @@ namespace CapaDatos
                 };
             }
         }
+
+        public Respuesta<List<ResponsePropi>> ListaPropietariosApp()
+        {
+            try
+            {
+                List<ResponsePropi> rptLista = new List<ResponsePropi>();
+
+                using (SqlConnection con = ConexionBD.GetInstance().ConexionDB())
+                {
+                    using (SqlCommand comando = new SqlCommand("usp_ObtenerPropietario", con))
+                    {
+                        comando.CommandType = CommandType.StoredProcedure;
+                        con.Open();
+
+                        using (SqlDataReader dr = comando.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                rptLista.Add(new ResponsePropi()
+                                {
+                                    IdPropietario = Convert.ToInt32(dr["IdPropietario"]),
+                                    NroCi = dr["NroCi"].ToString(),
+                                    Nombres = dr["Nombres"].ToString(),
+                                    Apellidos = dr["Apellidos"].ToString(),
+                                    Celular = dr["Celular"].ToString(),
+                                    Activo = Convert.ToBoolean(dr["Activo"]),
+                                    FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"].ToString()).ToString("dd/MM/yyyy")
+                                });
+                            }
+                        }
+                    }
+                }
+                return new Respuesta<List<ResponsePropi>>()
+                {
+                    Estado = true,
+                    Data = rptLista,
+                    Mensaje = "Usuarios obtenidos correctamente"
+                };
+            }
+            catch (Exception ex)
+            {
+                // Maneja cualquier error inesperado
+                return new Respuesta<List<ResponsePropi>>()
+                {
+                    Estado = false,
+                    Mensaje = "Ocurrió un error: " + ex.Message,
+                    Data = null
+                };
+            }
+        }
     }
 }

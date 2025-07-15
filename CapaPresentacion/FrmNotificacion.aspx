@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PaginaMas.Master" AutoEventWireup="true" CodeBehind="FrmNotificacion.aspx.cs" Inherits="CapaPresentacion.FrmNotificacion" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link rel="stylesheet" href="plugins/jquery-ui/jquery-ui.css" >
     <link rel="stylesheet" href="plugins/selectzero2/select2.min.css">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" runat="server">
@@ -72,6 +73,11 @@
                       <div class="row">
                           <div class="col-sm-6">
                               <div class="form-group">
+                                  <label for="txtfechapresent">Presentarse el:</label>
+                                  <input type="text" class="form-control form-control-sm" id="txtfechapresent">
+                              </div>
+
+                              <%--<div class="form-group">
                                   <label for="txtfechapresent">Presentarse en:</label>
                                   <div class="input-group date" id="txtfechapresent" data-target-input="nearest">
                                       <input type="text" class="form-control datetimepicker-input" data-target="#txtfechapresent" />
@@ -79,12 +85,12 @@
                                           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                       </div>
                                   </div>
-                              </div>
+                              </div>--%>
                           </div>
                           <div class="col-sm-6">
                               <div class="form-group">
-                                  <label for="txtfechaact">Fecha actual:</label>
-                                  <input type="text" class="form-control" id="txtfechaact" disabled>
+                                  <label for="txtfechaact">Fecha registro:</label>
+                                  <input type="text" class="form-control form-control-sm" id="txtfechaact" disabled>
                               </div>
                           </div>
                       </div>
@@ -225,6 +231,8 @@
 </div>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="footer" runat="server">
+    <script src="plugins/jquery-ui/jquery-ui.js"></script>
+    <script src="plugins/jquery-ui/idioma/datepicker-es.js"></script>
     <script src="plugins/selectzero2/select2.min.js"></script>
     <script src="plugins/selectzero2/es.min.js"></script>
     <script src="js/FrmNotificacion.js" type="text/javascript"></script>

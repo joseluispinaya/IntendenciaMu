@@ -5,7 +5,7 @@ let submitbtn = document.querySelector("#submit")
 let chatContainer = document.querySelector(".chat-container")
 
 let esquemaSimplificado = [];
-const tokenOPENAI = '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';
+const tokenOPENAI = 'mikey';
 
 let user = {
     message: null

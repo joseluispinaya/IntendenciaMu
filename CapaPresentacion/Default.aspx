@@ -390,7 +390,7 @@
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/templatemo.js"></script>
     <script src="assets/js/custom.js"></script>
-    <script src="js/Defaultze.js"></script>
+    <script src="js/ChatbotOriginal.js"></script>
     <%--<script src="js/chatbot.js"></script>--%>
     <!-- End Script -->
 </body>

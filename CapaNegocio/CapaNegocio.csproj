@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="NChatBot.cs" />
+    <Compile Include="NNegocio.cs" />
     <Compile Include="NNotificacion.cs" />
     <Compile Include="NPropietario.cs" />
     <Compile Include="NUsuario.cs" />

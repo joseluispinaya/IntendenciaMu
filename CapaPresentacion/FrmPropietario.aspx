@@ -10,12 +10,12 @@
                         <i class="fas fa-edit"></i>
                         Lista de Propietarios Registrados
                     </h3>
-                    <button type="button" id="btnNuevoPropie" class="btn btn-success btn-sm"><i class="fas fa-users"></i>Nuevo Registro</button>
+                    <button type="button" id="btnNuevoPropie" class="btn btn-success btn-sm"><i class="fas fa-users mr-2"></i>Nuevo Registro</button>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <table class="table table-bordered table-striped" id="tbPropietar" style="width: 100%">
+                            <table class="table table-bordered table-striped table-sm" id="tbPropietar" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th>Id</th>

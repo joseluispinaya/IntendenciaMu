@@ -10,15 +10,19 @@ function ObtenerFecha() {
 }
 
 $(document).ready(function () {
+    $.datepicker.setDefaults($.datepicker.regional["es"])
+    $("#txtfechapresent").datepicker({ dateFormat: "dd/mm/yy" });
+    $("#txtfechapresent").val(ObtenerFecha());
+
     cargarNotificador();
     cargarPropietarios();
-    moment.locale('es');
-    $('#txtfechapresent').datetimepicker({
-        format: 'L',
-        locale: 'es',
-        defaultDate: moment()
-    });
-    //$("#txtfechfin").datepicker({ dateFormat: "dd/mm/yy" });
+
+    //moment.locale('es');
+    //$('#txtfechapresent').datetimepicker({
+    //    format: 'L',
+    //    locale: 'es',
+    //    defaultDate: moment()
+    //});
 
     $("#txtfechaact").val(ObtenerFecha());
 
@@ -272,12 +276,13 @@ function ImprimirNot(idNotificacion) {
 
 function registerDataNotificacion() {
 
+    //FechaPresencia: $('#txtfechapresent').datetimepicker('date').format('DD/MM/YYYY')
     var request = {
         oNotificacion: {
             IdPropietario: parseInt($("#txtIdpopiet").val()),
             IdUsuario: parseInt($("#txtIdnotiifi").val()),
             Descripcion: $("#txtDescripcion").val(),
-            FechaPresencia: $('#txtfechapresent').datetimepicker('date').format('DD/MM/YYYY')
+            FechaPresencia: $("#txtfechapresent").val()
         }
     }
 

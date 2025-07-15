@@ -1,6 +1,11 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PaginaMas.Master" AutoEventWireup="true" CodeBehind="FrmUsuario.aspx.cs" Inherits="CapaPresentacion.FrmUsuario" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="dist/css/inpfile.css" rel="stylesheet"/>
+    <style>
+        #tbUsuario td {
+            vertical-align: middle !important;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" runat="server">
     <div class="row">
@@ -17,7 +22,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <table class="table table-bordered table-striped" id="tbUsuario" style="width: 100%">
+                            <table class="table table-bordered table-striped table-sm" id="tbUsuario" style="width: 100%">
                                 <thead>
                                     <tr>
                                         <th>Id</th>

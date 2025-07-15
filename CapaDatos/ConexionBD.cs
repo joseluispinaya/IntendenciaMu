@@ -23,7 +23,8 @@ namespace CapaDatos
         {
             SqlConnection conexion = new SqlConnection
             {
-                //ConnectionString = @"Data Source=SQL8001.site4now.net;Initial Catalog=db_aad627_greentfor;User Id=db_aad627_greentfor_admin;Password=Ortiz20242024@"
+                //IntendenciaServ IntendenciaDb
+                
                 ConnectionString = "Data Source=.;Initial Catalog=IntendenciaDb;Integrated Security=True"
             };
 

@@ -319,5 +319,211 @@ namespace CapaDatos
                 return new Respuesta<bool> { Estado = false, Mensaje = "Ocurrió un error: " + ex.Message };
             }
         }
+
+        public Respuesta<List<ENotificacion>> NotificacionesPorUsuario(int IdUsuario)
+        {
+            try
+            {
+                List<ENotificacion> rptLista = new List<ENotificacion>();
+
+                using (SqlConnection con = ConexionBD.GetInstance().ConexionDB())
+                {
+                    using (SqlCommand comando = new SqlCommand("usp_NotificacionesPorUsuario", con))
+                    {
+                        comando.CommandType = CommandType.StoredProcedure;
+                        comando.CommandTimeout = 30;
+                        comando.Parameters.AddWithValue("@IdUsuario", IdUsuario);
+                        con.Open();
+
+                        using (SqlDataReader dr = comando.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                rptLista.Add(new ENotificacion()
+                                {
+                                    IdNotificacion = Convert.ToInt32(dr["IdNotificacion"]),
+                                    Codigo = dr["Codigo"].ToString(),
+                                    Descripcion = dr["Descripcion"].ToString(),
+                                    FechaPresencia = Convert.ToDateTime(dr["FechaPresencia"].ToString()).ToString("dd/MM/yyyy"),
+                                    VFechaPresencia = Convert.ToDateTime(dr["FechaPresencia"].ToString()),
+                                    Activo = Convert.ToBoolean(dr["Activo"]),
+                                    FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"].ToString()).ToString("dd/MM/yyyy"),
+                                    VFechaRegistro = Convert.ToDateTime(dr["FechaRegistro"].ToString()),
+                                    Propietario = new EPropietario()
+                                    {
+                                        Nombres = dr["PropietarioNombres"].ToString(),
+                                        Apellidos = dr["PropietarioApellidos"].ToString(),
+                                        Celular = dr["Celular"].ToString()
+                                    },
+                                });
+                            }
+                        }
+                    }
+                }
+                return new Respuesta<List<ENotificacion>>()
+                {
+                    Estado = true,
+                    Data = rptLista,
+                    Mensaje = "Notificaciones obtenidos correctamente"
+                };
+            }
+            catch (Exception ex)
+            {
+                // Maneja cualquier error inesperado
+                return new Respuesta<List<ENotificacion>>()
+                {
+                    Estado = false,
+                    Mensaje = "Ocurrió un error: " + ex.Message,
+                    Data = null
+                };
+            }
+        }
+
+        public Respuesta<List<EReporteNotFe>> NotificacionRpt(string FechaInicio, string FechaFin)
+        {
+            try
+            {
+                List<EReporteNotFe> rptLista = new List<EReporteNotFe>();
+
+                using (SqlConnection con = ConexionBD.GetInstance().ConexionDB())
+                {
+                    using (SqlCommand comando = new SqlCommand("usp_NotificacionPorFecha", con))
+                    {
+                        comando.Parameters.AddWithValue("@FechaInicio", FechaInicio);
+                        comando.Parameters.AddWithValue("@FechaFin", FechaFin);
+                        comando.CommandType = CommandType.StoredProcedure;
+                        con.Open();
+
+                        using (SqlDataReader dr = comando.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                rptLista.Add(new EReporteNotFe()
+                                {
+                                    IdNotificacion = Convert.ToInt32(dr["IdNotificacion"]),
+                                    Codigo = dr["Codigo"].ToString(),
+                                    Descripcion = dr["Descripcion"].ToString(),
+                                    Estado = dr["Estado"].ToString(),
+                                    FechaRegistro = dr["FechaRegistro"].ToString(),
+                                    NombrePropietario = dr["NombrePropietario"].ToString(),
+                                    NombreUsuario = dr["NombreUsuario"].ToString()
+
+                                });
+                            }
+                        }
+                    }
+                }
+                return new Respuesta<List<EReporteNotFe>>()
+                {
+                    Estado = true,
+                    Data = rptLista,
+                    Mensaje = "Lista obtenidos correctamente"
+                };
+            }
+            catch (Exception ex)
+            {
+                // Maneja cualquier error inesperado
+                return new Respuesta<List<EReporteNotFe>>()
+                {
+                    Estado = false,
+                    Mensaje = "Ocurrió un error: " + ex.Message,
+                    Data = null
+                };
+            }
+        }
+
+        public Respuesta<List<EUsuario>> ObtenerUsuariosMasNotifica()
+        {
+            try
+            {
+                List<EUsuario> rptLista = new List<EUsuario>();
+
+                using (SqlConnection con = ConexionBD.GetInstance().ConexionDB())
+                {
+                    using (SqlCommand comando = new SqlCommand("usp_ObtenerUsuario", con))
+                    {
+                        comando.CommandType = CommandType.StoredProcedure;
+                        con.Open();
+
+                        using (SqlDataReader dr = comando.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                EUsuario propie = new EUsuario()
+                                {
+                                    IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
+                                    Nombres = dr["Nombres"].ToString(),
+                                    Apellidos = dr["Apellidos"].ToString(),
+                                    Correo = dr["Correo"].ToString(),
+                                    Users = dr["Users"].ToString(),
+                                    Clave = dr["Clave"].ToString(),
+                                    Celular = dr["Celular"].ToString(),
+                                    Foto = dr["Foto"].ToString(),
+                                    IdRol = Convert.ToInt32(dr["IdRol"]),
+                                    TokenSesion = dr["Token"].ToString(),
+                                    Activo = Convert.ToBoolean(dr["Activo"]),
+                                    FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"].ToString()).ToString("dd/MM/yyyy"),
+                                    VFechaRegistro = Convert.ToDateTime(dr["FechaRegistro"].ToString()),
+                                    Rol = new ERol() { Descripcion = dr["DescripcionRol"].ToString() },
+                                    ListaNotificacion = new List<ENotificacion>() // Inicializamos la lista vacía
+                                };
+                                rptLista.Add(propie);
+                            }
+                        }
+                    }
+                    //Paso 2: Obtener las mascotas para cada propietario
+                    foreach (var propie in rptLista)
+                    {
+                        using (SqlCommand productoCmd = new SqlCommand("usp_NotificacionesPorUsuarioRpt", con))
+                        {
+                            productoCmd.CommandType = CommandType.StoredProcedure;
+                            productoCmd.Parameters.AddWithValue("@IdUsuario", propie.IdUsuario);
+
+                            using (SqlDataReader productoDr = productoCmd.ExecuteReader())
+                            {
+                                while (productoDr.Read())
+                                {
+                                    ENotificacion masco = new ENotificacion()
+                                    {
+                                        IdNotificacion = Convert.ToInt32(productoDr["IdNotificacion"]),
+                                        Codigo = productoDr["Codigo"].ToString(),
+                                        Descripcion = productoDr["Descripcion"].ToString(),
+                                        FechaPresencia = Convert.ToDateTime(productoDr["FechaPresencia"].ToString()).ToString("dd/MM/yyyy"),
+                                        VFechaPresencia = Convert.ToDateTime(productoDr["FechaPresencia"].ToString()),
+                                        Activo = Convert.ToBoolean(productoDr["Activo"]),
+                                        FechaRegistro = Convert.ToDateTime(productoDr["FechaRegistro"].ToString()).ToString("dd/MM/yyyy"),
+                                        VFechaRegistro = Convert.ToDateTime(productoDr["FechaRegistro"].ToString()),
+                                        Propietario = new EPropietario()
+                                        {
+                                            Nombres = productoDr["PropietarioNombres"].ToString(),
+                                            Apellidos = productoDr["PropietarioApellidos"].ToString(),
+                                            Celular = productoDr["Celular"].ToString()
+                                        },
+                                    };
+
+                                    propie.ListaNotificacion.Add(masco);
+                                }
+                            }
+                        }
+                    }
+                }
+                return new Respuesta<List<EUsuario>>()
+                {
+                    Estado = true,
+                    Data = rptLista,
+                    Mensaje = "Propietarios y mascotas obtenidos correctamente"
+                };
+            }
+            catch (Exception ex)
+            {
+                // Maneja cualquier error inesperado
+                return new Respuesta<List<EUsuario>>()
+                {
+                    Estado = false,
+                    Mensaje = "Ocurrió un error: " + ex.Message,
+                    Data = null
+                };
+            }
+        }
     }
 }

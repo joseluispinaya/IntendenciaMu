@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CapaEntidad
 {
@@ -19,6 +20,8 @@ namespace CapaEntidad
         public DateTime VFechaRegistro { get; set; }
 
         public ERol Rol { get; set; }
+        public List<ENotificacion> ListaNotificacion { get; set; }
+        public int NumeroNoti => ListaNotificacion == null ? 0 : ListaNotificacion.Count;
         public string ImageFull => string.IsNullOrEmpty(Foto)
             ? $"/Imagenes/Sinfotop.png"
             : Foto;

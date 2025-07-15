@@ -13,9 +13,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <!-- daterange picker -->
-    <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+    <%--<link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">--%>
     <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <%--<link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">--%>
     <!-- DataTables -->
     <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -83,7 +83,7 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
+            <a href="#" class="brand-link">
                 <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">INTENDENCIA</span>
             </a>
@@ -112,8 +112,7 @@
                                 </p>
                             </a>
                         </li>
-                        <%--<li class="nav-header">EXAMPLES</li>--%>
-                        <li class="nav-item">
+                        <li class="nav-item menu-admin">
                             <a href="FrmUsuario.aspx" class="nav-link">
                                 <i class="nav-icon far fas fa-edit"></i>
                                 <p>
@@ -121,7 +120,7 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item menu-prop">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
@@ -137,7 +136,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="FrmNegocio.aspx" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Negocios</p>
                                     </a>
@@ -145,7 +144,7 @@
                             </ul>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item menu-noti">
                             <a href="FrmNotificacion.aspx" class="nav-link">
                                 <i class="nav-icon far fas fa-edit"></i>
                                 <p>
@@ -154,7 +153,7 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item menu-panelz">
                             <a href="FrmPanelNotificacio.aspx" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
@@ -164,24 +163,24 @@
                         </li>
                         
                         <li class="nav-header">REPORTES</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
+                        <li class="nav-item menu-report-noti">
+                            <a href="FrmReportNotifi.aspx" class="nav-link">
                                 <i class="nav-icon far fa-circle text-danger"></i>
                                 <p class="text">Notificacion</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item menu-report-neg">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon far fa-circle text-warning"></i>
                                 <p>Negocios</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <%--<li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon far fa-circle text-info"></i>
                                 <p>Padrones</p>
                             </a>
-                        </li>
+                        </li>--%>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -239,13 +238,13 @@
     <!-- Bootstrap 4 -->
     <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- InputMask -->
-    <script src="plugins/moment/moment.min.js"></script>
+    <%--<script src="plugins/moment/moment.min.js"></script>
     <script src="plugins/moment/locale/es.js"></script>
-    <script src="plugins/inputmask/jquery.inputmask.min.js"></script>
+    <script src="plugins/inputmask/jquery.inputmask.min.js"></script>--%>
     <!-- date-range-picker -->
-    <script src="plugins/daterangepicker/daterangepicker.js"></script>
+    <%--<script src="plugins/daterangepicker/daterangepicker.js"></script>--%>
     <!-- Tempusdominus Bootstrap 4 -->
-    <script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <%--<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>--%>
     <script src="plugins/loadingoverlay/loadingoverlay.min.js"></script>
     <!-- DataTables  & Plugins -->
     <script src="plugins/datatables/jquery.dataTables.min.js"></script>
