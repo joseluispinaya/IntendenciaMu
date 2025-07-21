@@ -39,7 +39,7 @@ $(document).ready(function () {
     $("#txtFechaInicio").val(ObtenerFechaA());
     $("#txtFechaFin").val(ObtenerFechaA());
 
-    listaNotifiFechas();
+    //listaNotifiFechas();
     listaUsuariosRpt();
 });
 
@@ -108,7 +108,7 @@ function listaUsuariosRpt() {
 
             if (response.d.Estado) {
                 var datos = response.d.Data;
-                console.log(datos);
+                //console.log(datos);
 
                 // Limpiamos el contenedor por si hay datos previos
                 $("#listarz").empty();

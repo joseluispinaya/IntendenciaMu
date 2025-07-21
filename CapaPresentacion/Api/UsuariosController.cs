@@ -7,6 +7,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using CapaEntidad;
 using CapaNegocio;
+using System.Globalization;
 
 namespace CapaPresentacion.Api
 {
@@ -117,10 +118,66 @@ namespace CapaPresentacion.Api
                     Mensaje = "Datos de notificación no válidos."
                 };
 
+                return Ok(respuestaError);
+            }
+
+            try
+            {
+                DateTime fechaPresenc = DateTime.ParseExact(request.FechaPresencia, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+                ENotificacion obj = new ENotificacion
+                {
+                    IdPropietario = request.IdPropietario,
+                    IdUsuario = request.IdUsuario,
+                    Descripcion = request.Descripcion,
+                    VFechaPresencia = fechaPresenc
+                };
+
+                Respuesta<int> respuesta = NNotificacion.GetInstance().RegistrarNotificacion(obj);
+
+                return Ok(respuesta);
+            }
+            catch (FormatException)
+            {
+                // Error al convertir la fecha
+                var respuestaError = new Respuesta<int>
+                {
+                    Estado = false,
+                    Mensaje = "Formato de fecha no válido. Asegúrese de usar dd/MM/yyyy."
+                };
+
+                return Ok(respuestaError);
+            }
+            catch (Exception)
+            {
+                // Cualquier otro error inesperado
+                var respuestaError = new Respuesta<int>
+                {
+                    Estado = false,
+                    Mensaje = "Ocurrió un error al registrar la notificación."
+                };
+
+                return Ok(respuestaError);
+            }
+        }
+
+        [HttpPost]
+        [Route("notificacionOrix")]
+        public IHttpActionResult RegistrarNotifiOriginal(NotificacionRequest request)
+        {
+            if (request == null)
+            {
+                var respuestaError = new Respuesta<int>
+                {
+                    Estado = false,
+                    Mensaje = "Datos de notificación no válidos."
+                };
+
                 return Ok(respuestaError); // Retorna con Ok para mantener la forma de respuesta uniforme
             }
 
-            DateTime fechaPresenc = Convert.ToDateTime(request.FechaPresencia);
+            //DateTime fechaPresenc = Convert.ToDateTime(request.FechaPresencia);
+            DateTime fechaPresenc = DateTime.ParseExact(request.FechaPresencia, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
             ENotificacion obj = new ENotificacion
             {

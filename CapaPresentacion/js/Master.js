@@ -6,7 +6,7 @@ $(document).ready(function () {
     //console.log(usuarioL);
 
     if (tokenSesion && usuarioL) {
-        console.log("hay sesion");
+        //console.log("hay sesion");
         // Parsear el usuario almacenado
         var usuParaenviar = JSON.parse(usuarioL);
         var idUsu = usuParaenviar.IdUsuario; // Obtener IdUsuario
@@ -16,7 +16,7 @@ $(document).ready(function () {
 
     } else {
         // Si no hay sesión, redirigir al login
-        console.log("no hay sesion");
+        //console.log("no hay sesion");
         window.location.href = 'Login.aspx';
     }
 
@@ -88,7 +88,7 @@ async function obtenerDetalleUsuarioR(idUsu) {
 }
 
 function CerrarSesionz() {
-    console.log("sesion cerrada");
+    //console.log("sesion cerrada");
     sessionStorage.clear();
     window.location.replace('Login.aspx');
 }
