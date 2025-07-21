@@ -17,7 +17,7 @@ namespace CapaPresentacion
 {
 	public partial class Default : System.Web.UI.Page
 	{
-        private const string OpenAIApiKey = "mi api";
+        private const string OpenAIApiKey = "mikey";
         private static List<TablasEsquema> _esquemaCache = null; // Cache para esquema
 
         protected void Page_Load(object sender, EventArgs e)
